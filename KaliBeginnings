@@ -1,0 +1,49 @@
+# First, We need to change the default passwords for Kali and Root users
+echo "\n *****Change the password for Kali*****\n"
+passwd kali
+echo "\n *****Change the password for Root*****\n"
+sudo passwd root
+	
+# Change Permissions for Sudo Group 
+sed -i 's#/sbin:/bin"#/sbin:/bin"\nDefaults        targetpw\nDefaults        !authenticate\n#' /etc/sudoers
+sed -i "s#NOPASSWD#PASSWD#g" /etc/sudoers
+sed -i "s#NOPASSWD#PASSWD#g" /etc/sudoers.d/kali-grant-root
+sed -i "s#NOPASSWD#PASSWD#g" /etc/sudoers.d/live
+
+# And also the default SSH Keys and config file (Must be root)
+cd /etc/ssh
+mkdir default_keys &&
+mv ssh_host_* default_keys &&
+dpkg-reconfigure openssh-server &&
+md5sum ssh_host_* default_keys/ssh_host_* &&
+sed -i "s/\#Port 22/Port 55555/" sshd_config &&
+sed -i "s/PasswordAuthentication no/\#PasswordAuthentication yes/" sshd_config &&
+sed -i "s/X11Forwarding yes/\#X11Forwarding no/" sshd_config &&
+sed -i "s/PrintMotd no/\#PrintMotd no/" sshd_config
+
+# Have to change Timezone and Date
+timedatectl set-timezone America/New_York
+timedatectl set-local-rtc 0
+
+# Uninstall TightVNC and Install RealVNC, Gdebi, SyncThing
+sudo apt-get remove tightvncserver xtightvncviewer -y &&
+sudo apt-get install gdebi tilix syncthing -y &&
+wget https://www.realvnc.com/download/file/viewer.files/VNC-Viewer-6.21.406-Linux-x64.deb &&
+gdebi-gtk VNC-Viewer-6.21.406-Linux-x64.deb &&
+wget https://www.realvnc.com/download/file/vnc.files/VNC-Server-6.7.4-Linux-x64.deb &&
+gdebi-gtk VNC-Server-6.7.4-Linux-x64.deb &&
+sytemctl enable vncserver-x11-serviced &&
+vnclicensewiz &&
+vncserver-x11-serviced &&
+rm VNC-Server-6.7.4-Linux-x64.deb VNC-Viewer-6.21.406-Linux-x64.deb &&
+wget https://atom.io/download/deb
+gdebi-gtk deb &&
+rm deb
+
+
+# Update and Upgrade
+sudo apt-get update && apt-get upgrade -y && apt-get clean -y && apt-get autoremove -y && apt-get autoclean -y
+
+# Install Ngrok
+
+	
