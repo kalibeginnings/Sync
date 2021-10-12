@@ -10,3 +10,5 @@ ln -s /home/kali/Sync/Configs/proxychains4.conf /etc/proxychains4.conf
 ln -s /home/kali/Sync/Configs/sshd_config /etc/ssh/sshd_config
 ln -s /home/kali/Sync/Configs/zsh_aliases /home/kali/.zsh_aliases
 ln -s /home/kali/Sync/Configs/zsh_ngrok /home/kali/.zsh_ngrok
+ln -s $(find /home/kali/Sync -maxdepth 1 -type d) /home/kali/
+ln -s $(find /home/kali/Sync -maxdepth 1 -type d) /root/
