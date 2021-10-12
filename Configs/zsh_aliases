@@ -1,0 +1,93 @@
+PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/local/games:/usr/games:/root/lscript:/root/Tools:/home/kali/Tools
+
+#My Functions
+function apt-updater {   	# Complete update and upgrade
+	sudo apt-get update &&
+	sudo apt-get full-upgrade -y &&
+	sudo apt-get autoremove -y &&
+	sudo apt-get autoclean -y &&
+	sudo apt-get clean -y
+}
+
+function aliases {		# Edit my custom Alias file
+	sudo nano /home/kali/.zsh_aliases
+}
+
+function help {	        # Shows all of my Custom Functions
+        grep function /home/kali/.zsh_aliases | sed -e 's#function#*#' -e 's#{# #' -e '/alias/d'
+}
+
+
+function t {			# Attach last tmux session
+	tmux attach
+}
+
+function e {			# Exit Session
+	exit
+}
+
+function cheat {		# Find Examples of Command and its arguments
+	curl cheat.sh/$1
+}
+
+function checkports {		# Identify which ports are currently open on local machine
+	nmap -sT -T5 -p- 127.0.0.1
+}
+
+function services {		# Show which services are currently running
+	systemctl | grep running
+}
+
+function browser {		# Run Firefox as root
+	XAUTHORITY=/$HOME/.Xauthority sudo firefox
+}
+
+function shrink {  		# After burning Kali ISO to flash drive, this shrinks the first partition to exact size of the ISO
+	wipefs $1 &&
+	blkid $1 &&
+	wipefs -o 0x8001 -f $1
+}
+
+function persistence {  	# Add an encrypted partition to a flash drive--Use /dev/*** as argument
+	cryptsetup --verbose --verify-passphrase luksFormat $1 &&
+	cryptsetup luksOpen $1 my_part &&
+	mkfs.ext4 -L persistence /dev/mapper/my_part &&
+	e2label /dev/mapper/my_part persistence &&
+	mount /dev/mapper/my_part /mnt &&
+	echo "/ union" > /mnt/persistence.conf &&
+	umount /mnt &&
+	cryptsetup luksClose /dev/mapper/my_part &&
+	echo "You can eject the drive now."
+}
+
+function port {  		# Discover what service is running on specific port or all ports[i.e., 1-1000]
+	sudo lsof -i:$1
+}
+
+function harden {  		# Analyze a specific service's security
+	/usr/bin/systemd-analyze security $1
+}
+
+function unlock {  		# In case of an account being locked, you can unlock it
+	/usr/sbin/faillock --user $1 --reset
+}
+
+function juice {		# Start SSH service and ngrok tunnel
+	sudo service ssh start && tmux -c "ngrok tcp 55555 -authtoken 1yKy2AnObahtJLj4SPLP3HvTMJX_7ztaCXBfomodfgTNh3rqN"
+}
+
+function maskurl {		# Mask an URL
+	sudo python3 /home/kali/Tools/maskurl/maskurl.py
+}
+
+function start {		# Start a Service
+	sudo service $1 start
+}
+
+function status {                # Status of a Service
+        sudo service $1 status
+}
+
+function stop {                # Stop a Service
+        sudo service $1 stop
+}
