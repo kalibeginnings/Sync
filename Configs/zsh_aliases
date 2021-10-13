@@ -1,7 +1,10 @@
 PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/local/games:/usr/games:/root/lscript:/root/Tools:/home/kali/Tools
+echo "\n[*] Your IP is" $(curl -s https://dnsleaktest.com | grep Hello | cut -d " " -f 3 | cut -d "<" -f 1)"\n"
 
 #My Functions
 function apt-updater {   	# Complete update and upgrade
+	sed -i "3,10d" /etc/apt/sources.list &&
+	echo "update" $(echo "rank" | python /home/kali/Tools/mirrorscript/mirrorscript.py | sed -n 17p | cut -d " " -f 5) | python /home/kali/Tools/mirrorscript/mirrorscript.py 2>>/dev/null;
 	sudo apt-get update &&
 	sudo apt-get full-upgrade -y &&
 	sudo apt-get autoremove -y &&
@@ -10,7 +13,7 @@ function apt-updater {   	# Complete update and upgrade
 }
 
 function aliases {		# Edit my custom Alias file
-	sudo nano /home/kali/.zsh_aliases
+	sudo mousepad /home/kali/.zsh_aliases &
 }
 
 function help {	        # Shows all of my Custom Functions
@@ -24,6 +27,14 @@ function t {			# Attach last tmux session
 
 function e {			# Exit Session
 	exit
+}
+
+function myip {			# Show if Your IP is Hidden or Not
+	echo "\n[*] Your IP is" $(curl -s https://dnsleaktest.com | grep Hello | cut -d " " -f 3 | cut -d "<" -f 1)
+}
+
+function cpu {			# Monitors CPU Every Nth Seconds
+	iostat -c $1
 }
 
 function cheat {		# Find Examples of Command and its arguments
@@ -91,3 +102,17 @@ function status {                # Status of a Service
 function stop {                # Stop a Service
         sudo service $1 stop
 }
+
+function googledns {		# Change DNS to Google for Faster network
+	sed -i "s/nameserver/\#nameserver/" /etc/resolv.conf &&
+	echo "nameserver 8.8.8.8\nnameserver 8.8.4.4" >> /etc/resolv.conf
+}
+
+
+
+
+
+#### Key Bindings
+#### Run showkey -a to list characters for specific key combo and then "bindkey -s 'key' 'command\n'"
+bindkey -s '^[OP' 'apt-updater\n'
+bindkey -s '^[[1;5A' 'start tor && proxychains4 zsh\n'
