@@ -238,6 +238,9 @@ fi
 alias ll='ls -l'
 alias la='ls -A'
 alias l='ls -CF'
+function help {
+	echo "\n                 Functions\n"; grep function /home/kali/.zsh_aliases | sed -e 's#function#*#' -e 's#{# #' -e '/alias/d' | sort; help; echo "\n"; grep "####" /home/kali/.zsh_aliases | sed "s/\#\#\#\#\#/\*/" | sed "s/\#\#\#\#/ /"
+}
 
 # enable auto-suggestions based on the history
 if [ -f /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh ]; then
