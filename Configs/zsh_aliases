@@ -3,21 +3,26 @@ echo "\n[*] Your IP is" $(curl -s https://dnsleaktest.com | grep Hello | cut -d 
 
 #My Functions
 function apt-updater {   	# Complete update and upgrade
-	sed -i "3,10d" /etc/apt/sources.list &&
+	sudo sed -i "s/\#deb/deb/" /etc/apt/sources.list &&
+	echo "\n*****Finding the Fastest Kali Mirror*****\n"
 	echo "update" $(echo "rank" | python /home/kali/Tools/mirrorscript/mirrorscript.py | sed -n 17p | cut -d " " -f 5) | python /home/kali/Tools/mirrorscript/mirrorscript.py 2>>/dev/null;
+	echo "\n*****Updating Your System*****\n"
 	sudo apt-get update &&
+	echo "\n*****Starting Upgrade Now*****\n"
 	sudo apt-get full-upgrade -y &&
 	sudo apt-get autoremove -y &&
 	sudo apt-get autoclean -y &&
-	sudo apt-get clean -y
+	sudo apt-get clean -y &&
+	echo "\n*****Cleaning up your Sources List for Next Time*****\n"                      
+	sudo sed -i "3,10d" /etc/apt/sources.list
 }
 
 function aliases {		# Edit my custom Alias file
-	sudo mousepad /home/kali/.zsh_aliases &
+	sudo nano /home/kali/.zsh_aliases
 }
 
 function help {	        # Shows all of my Custom Functions
-        grep function /home/kali/.zsh_aliases | sed -e 's#function#*#' -e 's#{# #' -e '/alias/d'
+        grep function /home/kali/.zsh_aliases | sed -e 's#function#*#' -e 's#{# #' -e '/alias/d' | sort
 }
 
 
@@ -29,7 +34,7 @@ function e {			# Exit Session
 	exit
 }
 
-function myip {			# Show if Your IP is Hidden or Not
+function myip {		# Show if Your IP is Hidden or Not
 	echo "\n[*] Your IP is" $(curl -s https://dnsleaktest.com | grep Hello | cut -d " " -f 3 | cut -d "<" -f 1)
 }
 
@@ -53,13 +58,13 @@ function browser {		# Run Firefox as root
 	XAUTHORITY=/$HOME/.Xauthority sudo firefox
 }
 
-function shrink {  		# After burning Kali ISO to flash drive, this shrinks the first partition to exact size of the ISO
+function shrink {  		# Shrink the ISO partition of Kali USB
 	wipefs $1 &&
 	blkid $1 &&
 	wipefs -o 0x8001 -f $1
 }
 
-function persistence {  	# Add an encrypted partition to a flash drive--Use /dev/*** as argument
+function persistence {  	# Create Encrypted persistence--Use /dev/*** as argument
 	cryptsetup --verbose --verify-passphrase luksFormat $1 &&
 	cryptsetup luksOpen $1 my_part &&
 	mkfs.ext4 -L persistence /dev/mapper/my_part &&
@@ -71,7 +76,7 @@ function persistence {  	# Add an encrypted partition to a flash drive--Use /dev
 	echo "You can eject the drive now."
 }
 
-function port {  		# Discover what service is running on specific port or all ports[i.e., 1-1000]
+function port {  		# Identify the service behind specific port(s)
 	sudo lsof -i:$1
 }
 
@@ -95,7 +100,7 @@ function start {		# Start a Service
 	sudo service $1 start
 }
 
-function status {                # Status of a Service
+function status {		# Status of a Service
         sudo service $1 status
 }
 
@@ -113,6 +118,8 @@ function googledns {		# Change DNS to Google for Faster network
 
 
 #### Key Bindings
-#### Run showkey -a to list characters for specific key combo and then "bindkey -s 'key' 'command\n'"
-bindkey -s '^[OP' 'apt-updater\n'
-bindkey -s '^[[1;5A' 'start tor && proxychains4 zsh\n'
+#### C-up		# Update
+#### C-down		# Anonymize Shell
+## Run showkey -a to list characters for specific key combo and then "bindkey -s 'key' 'command\n'"
+bindkey -s '^[[1;5A' 'apt-updater\n'
+bindkey -s '^[[1;5B' 'sudo service tor start && proxychains4 zsh\n'
