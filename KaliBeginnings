@@ -25,9 +25,9 @@ sed -i "s/PrintMotd no/\#PrintMotd no/" sshd_config
 timedatectl set-timezone America/New_York
 timedatectl set-local-rtc 0
 
-# Uninstall TightVNC and Install RealVNC, Gdebi, SyncThing
+# Uninstall TightVNC and Install RealVNC, Gdebi,Tor, SyncThing
 sudo apt-get remove tightvncserver xtightvncviewer -y &&
-sudo apt-get install gdebi tilix syncthing -y &&
+sudo apt-get install gdebi tilix tor syncthing -y &&
 wget https://www.realvnc.com/download/file/viewer.files/VNC-Viewer-6.21.406-Linux-x64.deb &&
 gdebi-gtk VNC-Viewer-6.21.406-Linux-x64.deb &&
 wget https://www.realvnc.com/download/file/vnc.files/VNC-Server-6.7.4-Linux-x64.deb &&
@@ -36,7 +36,7 @@ sytemctl enable vncserver-x11-serviced &&
 vnclicensewiz &&
 vncserver-x11-serviced &&
 rm VNC-Server-6.7.4-Linux-x64.deb VNC-Viewer-6.21.406-Linux-x64.deb &&
-wget https://atom.io/download/deb
+wget https://atom.io/download/deb &&
 gdebi-gtk deb &&
 rm deb
 
@@ -45,5 +45,15 @@ rm deb
 sudo apt-get update && apt-get upgrade -y && apt-get clean -y && apt-get autoremove -y && apt-get autoclean -y
 
 # Install Ngrok
+sudo wget https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-linux-amd64.zip &&
+unzip ngrok-stable-linux-amd64.zip &&
+mv ngrok /usr/bin &&
+rm ngrok-stable-linux-amd64.zip
+
+#If Running a live image, then you need to clone Kali Beginnings Repo and link all necessary files
+cd /home/kali &&
+git clone https://github.com/kalibeginnings/Sync &&
+sudo rm -rf /home/kali/Sync/.git &&
+sudo zsh /home/kali/Sync/setup.sh
 
 	
