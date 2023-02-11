@@ -124,7 +124,7 @@ if [ "$color_prompt" = yes ]; then
 
     # enable syntax-highlighting
     if [ -f /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ] && [ "$color_prompt" = yes ]; then
-        . /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+       source/usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
         ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets pattern)
         ZSH_HIGHLIGHT_STYLES[default]=none
         ZSH_HIGHLIGHT_STYLES[unknown-token]=fg=red,bold
@@ -244,22 +244,22 @@ function help {
 
 # enable auto-suggestions based on the history
 if [ -f /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh ]; then
-    . /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+    source /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh
     # change suggestion color
     ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=#999'
 fi
 
 # Aliases
 if [ -f $HOME/.zsh_aliases ]; then
-    . $HOME/.zsh_aliases
+    source $HOME/.zsh_aliases
 fi
 
 # Ngrok Authtokens
 if [ -f $HOME/.zsh_ngrok ]; then
-    . $HOME/.zsh_ngrok
+    source $HOME/.zsh_ngrok
 fi
 
 # enable command-not-found if installed
 if [ -f /etc/zsh_command_not_found ]; then
-    . /etc/zsh_command_not_found
+    source /etc/zsh_command_not_found
 fi
