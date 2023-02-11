@@ -1,0 +1,84 @@
+PATH=$PATH:$HOME/Tools:
+echo "\n[*] Your IP is" $(curl -s https://dnsleaktest.com | grep Hello | cut -d " " -f 3 | cut -d "<" -f 1)"\n"
+
+#My Functions
+function update {		# Fetches the fastest mirrors and Updates the System
+	sudo reflector --latest 20 --protocol https --sort rate --save /etc/pacman.d/mirrorlist && sudo pacman -Syyu && sudo pacman -Rcns $(sudo pacman -Qdtq)
+}
+
+function aliases {		# Edit my custom Alias file
+	sudo nano $HOME/.zsh_aliases
+}
+
+function help {	        # Shows all of my Custom Functions
+    grep function $HOME/.zsh_aliases | sed -e 's#function#*#' -e 's#{# #' -e '/alias/d' | sort
+}
+
+
+function t {			# Attach last tmux session
+	tmux attach
+}
+
+function e {			# Exit Session
+	exit
+}
+
+function myip {		# Show if Your IP is Hidden or Not
+	echo "\n[*] Your IP is" $(curl -s https://dnsleaktest.com | grep Hello | cut -d " " -f 3 | cut -d "<" -f 1)
+}
+
+function cheat {		# Find Examples of Command and its arguments
+	curl cheat.sh/$1
+}
+
+function checkports {		# Identify which ports are currently open on local machine
+	nmap -sT -T5 -p- 127.0.0.1
+}
+
+function services {		# Show which services are currently running
+	systemctl | grep running
+}
+
+function port {  		# Identify the service behind specific port(s)
+	sudo lsof -i:$1
+}
+
+function harden {  		# Analyze a specific service's security
+	/usr/bin/systemd-analyze security $1
+}
+
+function juice {		# Start SSH service and ngrok tunnel
+	sudo service ssh start && tmux -c "ngrok tcp 55555 -authtoken 1yKy2AnObahtJLj4SPLP3HvTMJX_7ztaCXBfomodfgTNh3rqN"
+}
+
+function maskurl {		# Mask an URL
+	sudo python3 $HOME/Tools/maskurl/maskurl.py
+}
+
+function start {		# Start a Service
+	sudo systemctl start $1 
+}
+
+function status {		# Status of a Service
+        sudo systemctl status $1 
+}
+
+function stop {                # Stop a Service
+        sudo systemctl stop $1
+}
+
+function googledns {		# Change DNS to Google for Faster network
+	sed -i "s/nameserver/\#nameserver/" /etc/resolv.conf &&
+	echo "nameserver 8.8.8.8\nnameserver 8.8.4.4" >> /etc/resolv.conf
+}
+
+
+
+
+
+#### Key Bindings
+#### C-up		# Update
+#### C-down		# Anonymize Shell
+## Run showkey -a to list characters for specific key combo and then "bindkey -s 'key' 'command\n'"
+bindkey -s '^[[1;5A' 'apt-updater\n'
+bindkey -s '^[[1;5B' 'sudo service tor start && proxychains4 zsh\n'

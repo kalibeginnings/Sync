@@ -1,5 +1,5 @@
-beef=-config=/home/kali/.ngrok2/ngrok.yml
-listen=-config=/home/kali/.ngrok2/ngrok2.yml
+listen=-config=$HOME/.ngrok2/ngrok.yml
+beef=-config=$HOME/.ngrok2/ngrok2.yml
 one=1yKvvaaG8XzXNni7keMy4twSCMh_6z9k4FbCzEgVCcsSgDgrR
 two=1yKy3orYDjewNcOmOjlnzefpIXU_ziabd5UH2whDRUEW4FDg
 three=1yKy2AnObahtJLj4SPLP3HvTMJX_7ztaCXBfomodfgTNh3rqN

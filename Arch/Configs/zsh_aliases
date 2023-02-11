@@ -1,11 +1,11 @@
-PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/local/games:/usr/games:/root/lscript:/root/Tools:/home/kali/Tools
+PATH=$PATH:$HOME/Tools:
 echo "\n[*] Your IP is" $(curl -s https://dnsleaktest.com | grep Hello | cut -d " " -f 3 | cut -d "<" -f 1)"\n"
 
 #My Functions
 function apt-updater {   	# Complete update and upgrade
 	sudo sed -i "s/\#deb/deb/" /etc/apt/sources.list &&
 	echo "\n*****Finding the Fastest Kali Mirror*****\n"
-	echo "update" $(echo "rank" | python /home/kali/Tools/mirrorscript/mirrorscript.py | sed -n 17p | cut -d " " -f 5) | python /home/kali/Tools/mirrorscript/mirrorscript.py 2>>/dev/null;
+	echo "update" $(echo "rank" | python $HOME/Tools/mirrorscript/mirrorscript.py | sed -n 17p | cut -d " " -f 5) | python $HOME/Tools/mirrorscript/mirrorscript.py 2>>/dev/null;
 	echo "\n*****Updating Your System*****\n"
 	sudo apt-get update &&
 	echo "\n*****Starting Upgrade Now*****\n"
@@ -18,11 +18,11 @@ function apt-updater {   	# Complete update and upgrade
 }
 
 function aliases {		# Edit my custom Alias file
-	sudo nano /home/kali/.zsh_aliases
+	sudo nano $HOME/.zsh_aliases
 }
 
 function help {	        # Shows all of my Custom Functions
-        grep function /home/kali/.zsh_aliases | sed -e 's#function#*#' -e 's#{# #' -e '/alias/d' | sort
+        grep function $HOME/.zsh_aliases | sed -e 's#function#*#' -e 's#{# #' -e '/alias/d' | sort
 }
 
 
@@ -93,7 +93,7 @@ function juice {		# Start SSH service and ngrok tunnel
 }
 
 function maskurl {		# Mask an URL
-	sudo python3 /home/kali/Tools/maskurl/maskurl.py
+	sudo python3 $HOME/Tools/maskurl/maskurl.py
 }
 
 function start {		# Start a Service
