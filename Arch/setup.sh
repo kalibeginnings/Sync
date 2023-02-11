@@ -49,6 +49,7 @@ sudo ln -sf $HOME/Sync/Arch/Configs/proxychains.conf /etc/proxychains.conf
 ln -sf $HOME/Sync/Arch/Configs/zsh_aliases $HOME/.zsh_aliases
 sudo ln -sf $HOME/Sync/Arch/Configs/zsh_aliases /root/.zsh_aliases
 ln -sf $HOME/Sync/Arch/Configs/zsh_ngrok $HOME/.zsh_ngrok
+sudo ln -sf $HOME/Sync/Arch/Configs/zsh_ngrok /root/.zsh_ngrok
 ln -sf $HOME/Sync/Arch/Configs/ngrok.yml $HOME/.ngrok2/.ngrok.yml
 ln -sf $HOME/Sync/Arch/Configs/ngrok2.yml $HOME/.ngrok2/.ngrok2.yml
 ln -sf $(find $HOME/Sync -maxdepth 1 -type d -not -path "./Sync/*") $HOME/
