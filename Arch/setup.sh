@@ -1,29 +1,48 @@
 #!/bin/zsh
 
 # Reconfigure SSH
-cd /etc/ssh
-mkdir default_keys &&
-mv ssh_host_* default_keys &&
-dpkg-reconfigure openssh-server &&
-md5sum ssh_host_* default_keys/ssh_host_* &&
-sed -i "s/\#Port 22/Port 55555/" sshd_config &&
-sed -i "s/PasswordAuthentication no/\#PasswordAuthentication yes/" sshd_config &&
-sed -i "s/X11Forwarding yes/\#X11Forwarding no/" sshd_config &&
-sed -i "s/PrintMotd no/\#PrintMotd no/" sshd_config
+#if [[ ! -d /etc/ssh/default_keys ]]; then
+#    mkdir -p /etc/ssh/default_keys
+#fi
+
+#if grep --recursive --line-number --binary-files=without-match "ssh_host_" /etc/ssh ; then
+#    mv /etc/ssh/ssh_host_* /etc/ssh/default_keys
+#fi
+
+#ssh-keygen -f /etc/ssh/ssh_host_rsa -p "ABC123def.";
+
+#if  grep --recursive --line-number --binary-files=without-match "ssh_host_" /etc/ssh/default_keys ; then
+#    md5sum /etc/ssh/ssh_host_* /etc/ssh/default_keys/ssh_host_*
+#fi
+
+if [[ -f /etc/ssh/sshd_config ]]; then 
+    sed -i "s/\#Port 22/Port 55555/" /etc/ssh/sshd_config;
+    sed -i "s/PasswordAuthentication no/\#PasswordAuthentication yes/" /etc/ssh/sshd_config;
+    sed -i "s/X11Forwarding yes/\#X11Forwarding no/" /etc/ssh/sshd_config;
+    sed -i "s/PrintMotd no/\#PrintMotd no/" /etc/ssh/sshd_config
+else    
+    cp $HOME/Sync/Arch/Configs/sshd_config /etc/ssh/sshd_config
+fi
 
 # Install Ngrok
 if ! sudo pacman -Si ngrok; then
-    sudo wget https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-linux-amd64.zip &&
-    unzip ngrok-stable-linux-amd64.zip &&
-    mv ngrok /usr/bin &&
+    echo "\nInstalling Ngrok Now ...\n"
+    sudo wget https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-linux-amd64.zip;
+    unzip ngrok-stable-linux-amd64.zip;
+    mv ngrok /usr/bin;
     rm ngrok-stable-linux-amd64.zip
+else 
+    clear;
+    echo "Ngrok Is Already Installed\n"
+    sleep 3
+    clear
 fi
 ngrok authtoken 1zLFHvAICLfpld9JB91SvRBux3x_4rZfGLP8y7o1YeD2Ui1Nc
 
 # Link all Configs and Directories
-mv $HOME/.zshrc /tmp
-mv /root/.zshrc /tmp
-mv /etc/proxychains.conf /tmp
+if [[ -f $HOME/.zshrc ]]; then mv $HOME/.zshrc /tmp; fi
+if [[ -f /root/.zshrc ]]; then mv /root/.zshrc /tmp ;fi
+if [[ -f /etc/proxychains.conf ]]; then mv /etc/proxychains.conf /tmp; fi
 ln -s $HOME/Sync/Arch/Configs/zshrc $HOME/.zshrc
 ln -s $HOME/Sync/Arch/Configs/zshrc /root/.zshrc
 ln -s $HOME/Sync/Arch/Configs/proxychains.conf /etc/proxychains.conf
