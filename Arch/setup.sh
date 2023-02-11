@@ -41,14 +41,15 @@ ngrok authtoken 1zLFHvAICLfpld9JB91SvRBux3x_4rZfGLP8y7o1YeD2Ui1Nc
 
 # Link all Configs and Directories
 if [[ -f $HOME/.zshrc ]]; then mv $HOME/.zshrc /tmp; fi
-if [[ -f /root/.zshrc ]]; then mv /root/.zshrc /tmp ;fi
-if [[ -f /etc/proxychains.conf ]]; then mv /etc/proxychains.conf /tmp; fi
-ln -s $HOME/Sync/Arch/Configs/zshrc $HOME/.zshrc
-ln -s $HOME/Sync/Arch/Configs/zshrc /root/.zshrc
-ln -s $HOME/Sync/Arch/Configs/proxychains.conf /etc/proxychains.conf
-ln -s $HOME/Sync/Arch/Configs/zsh_aliases $HOME/.zsh_aliases
-ln -s $HOME/Sync/Arch/Configs/zsh_ngrok $HOME/.zsh_ngrok
-ln -s $HOME/Sync/Arch/Configs/ngrok.yml $HOME/.ngrok2/.ngrok.yml
-ln -s $HOME/Sync/Arch/Configs/ngrok2.yml $HOME/.ngrok2/.ngrok2.yml
-ln -s $(find $HOME/Sync -maxdepth 1 -type d -not -path "./Sync/*") $HOME/
-ln -s $(find $HOME/Sync -maxdepth 1 -type d -not -path "./Sync/*") /root/
+if [[ -f /root/.zshrc ]]; then sudo mv /root/.zshrc /tmp ;fi
+if [[ -f /etc/proxychains.conf ]]; then sudo mv /etc/proxychains.conf /tmp; fi
+ln -sf $HOME/Sync/Arch/Configs/zshrc $HOME/.zshrc
+sudo ln -sf $HOME/Sync/Arch/Configs/zshrc /root/.zshrc
+sudo ln -sf $HOME/Sync/Arch/Configs/proxychains.conf /etc/proxychains.conf
+ln -sf $HOME/Sync/Arch/Configs/zsh_aliases $HOME/.zsh_aliases
+sudo ln -sf $HOME/Sync/Arch/Configs/zsh_aliases /root/.zsh_aliases
+ln -sf $HOME/Sync/Arch/Configs/zsh_ngrok $HOME/.zsh_ngrok
+ln -sf $HOME/Sync/Arch/Configs/ngrok.yml $HOME/.ngrok2/.ngrok.yml
+ln -sf $HOME/Sync/Arch/Configs/ngrok2.yml $HOME/.ngrok2/.ngrok2.yml
+ln -sf $(find $HOME/Sync -maxdepth 1 -type d -not -path "./Sync/*") $HOME/
+sudo ln -sf $(find $HOME/Sync -maxdepth 1 -type d -not -path "./Sync/*") /root/
