@@ -12,15 +12,15 @@ function mirrors {
 	sudo reflector --latest 20 --protocol https --sort rate --save /etc/pacman.d/mirrorlist
 }
 function aliases {		# Edit my custom Alias file
-	sudo nano $HOME/.zsh_aliases && git -C $HOME/Sync add . && git -C Sync commit -m "Saved" && git -C Sync push
+	sudo nano $HOME/Sync/Arch/Configs/.zsh_aliases && git -C $HOME/Sync add . && git -C Sync commit -m "Saved" && git -C Sync push
 }
 
 function zshrc {
-	sudo nano $HOME/.zsh_rc && git -C $HOME/Sync add . && git -C Sync commit -m "Saved" && git -C Sync push
+	sudo nano $HOME/Sync/Arch/Configs/.zsh_rc && git -C $HOME/Sync add . && git -C Sync commit -m "Saved" && git -C Sync push
 }
 
 function zshngrok {
-	sudo nano $HOME/.zsh_ngrok && git -C $HOME/Sync add . && git -C Sync commit -m "Saved" && git -C Sync push
+	sudo nano $HOME/Sync/Arch/Configs/.zsh_ngrok && git -C $HOME/Sync add . && git -C Sync commit -m "Saved" && git -C Sync push
 }
 function help {	        # Shows all of my Custom Functions
         grep function $HOME/.zsh_aliases | sed -e 's#function#*#' -e 's#{# #' -e '/alias/d' | sort
