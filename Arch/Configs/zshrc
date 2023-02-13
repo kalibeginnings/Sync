@@ -15,6 +15,17 @@ WORDCHARS=${WORDCHARS//\/} # Don't consider certain characters part of the word
 # hide EOL sign ('%')
 PROMPT_EOL_MARK=""
 
+# Plugins
+plugins=(
+  git
+  bundler
+  dotenv
+  macos
+  rake
+  rbenv
+  ruby
+)
+
 # configure key keybindings
 bindkey -e                                        # emacs key bindings
 bindkey ' ' magic-space                           # do history expansion on space

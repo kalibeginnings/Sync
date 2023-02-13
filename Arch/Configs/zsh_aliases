@@ -2,10 +2,14 @@ PATH=$PATH:$HOME/Tools:
 echo "\n[*] Your IP is" $(curl -s https://dnsleaktest.com | grep Hello | cut -d " " -f 3 | cut -d "<" -f 1)"\n"
 
 #My Functions
-function apt-updater {   	# Complete update and upgrade
+function update {   	# Complete update and upgrade
+	git -C $HOME/Sync pull
 	sudo reflector --latest 20 --protocol https --sort rate --save /etc/pacman.d/mirrorlist && sudo pacman -Syyu && sudo pacman -Rcns $(sudo pacman -Qdtq)
 }
 
+function mirrors {
+	sudo reflector --latest 20 --protocol https --sort rate --save /etc/pacman.d/mirrorlist
+}
 function aliases {		# Edit my custom Alias file
 	sudo nano $HOME/.zsh_aliases
 }
