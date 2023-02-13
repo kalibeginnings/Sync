@@ -1,4 +1,5 @@
 # ~/.zshrc file for zsh interactive shells.
+#TEst
 # see /usr/share/doc/zsh/examples/zshrc for examples
 
 setopt autocd              # change directory just by typing its name
