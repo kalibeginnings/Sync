@@ -3,18 +3,7 @@ echo "\n[*] Your IP is" $(curl -s https://dnsleaktest.com | grep Hello | cut -d 
 
 #My Functions
 function apt-updater {   	# Complete update and upgrade
-	sudo sed -i "s/\#deb/deb/" /etc/apt/sources.list &&
-	echo "\n*****Finding the Fastest Kali Mirror*****\n"
-	echo "update" $(echo "rank" | python $HOME/Tools/mirrorscript/mirrorscript.py | sed -n 17p | cut -d " " -f 5) | python $HOME/Tools/mirrorscript/mirrorscript.py 2>>/dev/null;
-	echo "\n*****Updating Your System*****\n"
-	sudo apt-get update &&
-	echo "\n*****Starting Upgrade Now*****\n"
-	sudo apt-get full-upgrade -y &&
-	sudo apt-get autoremove -y &&
-	sudo apt-get autoclean -y &&
-	sudo apt-get clean -y &&
-	echo "\n*****Cleaning up your Sources List for Next Time*****\n"                      
-	sudo sed -i "3,10d" /etc/apt/sources.list
+	sudo reflector --latest 20 --protocol https --sort rate --save /etc/pacman.d/mirrorlist && sudo pacman -Syyu && sudo pacman -Rcns $(sudo pacman -Qdtq)
 }
 
 function aliases {		# Edit my custom Alias file
@@ -54,38 +43,12 @@ function services {		# Show which services are currently running
 	systemctl | grep running
 }
 
-function browser {		# Run Firefox as root
-	XAUTHORITY=/$HOME/.Xauthority sudo firefox
-}
-
-function shrink {  		# Shrink the ISO partition of Kali USB
-	wipefs $1 &&
-	blkid $1 &&
-	wipefs -o 0x8001 -f $1
-}
-
-function persistence {  	# Create Encrypted persistence--Use /dev/*** as argument
-	cryptsetup --verbose --verify-passphrase luksFormat $1 &&
-	cryptsetup luksOpen $1 my_part &&
-	mkfs.ext4 -L persistence /dev/mapper/my_part &&
-	e2label /dev/mapper/my_part persistence &&
-	mount /dev/mapper/my_part /mnt &&
-	echo "/ union" > /mnt/persistence.conf &&
-	umount /mnt &&
-	cryptsetup luksClose /dev/mapper/my_part &&
-	echo "You can eject the drive now."
-}
-
 function port {  		# Identify the service behind specific port(s)
 	sudo lsof -i:$1
 }
 
 function harden {  		# Analyze a specific service's security
 	/usr/bin/systemd-analyze security $1
-}
-
-function unlock {  		# In case of an account being locked, you can unlock it
-	/usr/sbin/faillock --user $1 --reset
 }
 
 function juice {		# Start SSH service and ngrok tunnel
@@ -121,5 +84,5 @@ function googledns {		# Change DNS to Google for Faster network
 #### C-up		# Update
 #### C-down		# Anonymize Shell
 ## Run showkey -a to list characters for specific key combo and then "bindkey -s 'key' 'command\n'"
-bindkey -s '^[[1;5A' 'apt-updater\n'
+bindkey -s '^[[1;5A' 'update\n'
 bindkey -s '^[[1;5B' 'sudo service tor start && proxychains4 zsh\n'
