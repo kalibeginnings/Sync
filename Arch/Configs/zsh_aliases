@@ -21,7 +21,7 @@ function aliases {		# Edit my custom Alias file
 }
 
 function zshrc {
-	sudo nano $HOME/Sync/Arch/Configs/zsh_rc;
+	sudo nano $HOME/Sync/Arch/Configs/zshrc;
 	git -C $HOME/Sync add .;
 	git -C $HOME/Sync commit -m "Saved";
 	git -C $HOME/Sync push;
