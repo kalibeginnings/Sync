@@ -12,12 +12,8 @@ function mirrors {
 }
 
 function aliases {
-	google-chrome --new-window "https://github.dev/kalibeginnings/Sync/blob/main/Arch/Configs/zsh_aliases" && git -C $HOME/Sync pull
+	google-chrome-stable --new-window "https://github.dev/kalibeginnings/Sync/blob/main/Arch/Configs/zsh_aliases" && git -C $HOME/Sync pull
 }
-
-#function aliases {		# Edit my custom Alias file
-#	sudo nano $HOME/Sync/Arch/Configs/.zsh_aliases && git -C $HOME/Sync add . && git -C $HOME/Sync commit -m "Saved" && git -C $HOME/Sync push
-#}
 
 function zshrc {
 	sudo nano $HOME/Sync/Arch/Configs/.zsh_rc && git -C $HOME/Sync add . && git -C $HOME/Sync commit -m "Saved" && git -C $HOME/Sync push
