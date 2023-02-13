@@ -86,15 +86,15 @@ function maskurl {		# Mask an URL
 }
 
 function start {		# Start a Service
-	sudo service $1 start
+	sudo systemctl start $1
 }
 
 function status {		# Status of a Service
-        sudo service $1 status
+        sudo systemctl status $1
 }
 
 function stop {                # Stop a Service
-        sudo service $1 stop
+        sudo systemctl stop $1
 }
 
 function googledns {		# Change DNS to Google for Faster network
