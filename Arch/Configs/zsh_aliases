@@ -3,8 +3,9 @@ echo "\n[*] Your IP is" $(curl -s https://dnsleaktest.com | grep Hello | cut -d 
 
 #My Functions
 function update {   	# Complete update and upgrade
-	git -C $HOME/Sync pull
-	sudo reflector --latest 20 --protocol https --sort rate --save /etc/pacman.d/mirrorlist && sudo pacman -Syyu && sudo pacman -Rcns $(sudo pacman -Qdtq)
+	git -C $HOME/Sync pull;
+	sudo pacman -Syyu;
+	sudo pacman -Rcns $(sudo pacman -Qdtq)
 }
 
 function mirrors {
