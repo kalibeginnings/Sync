@@ -2,26 +2,26 @@
 
 # Reconfigure SSH
 if [[ ! -d /etc/ssh/default_keys ]]; then
-    mkdir -p /etc/ssh/default_keys
+    sudo mkdir -p /etc/ssh/default_keys
 fi
 
 if grep --recursive --line-number --binary-files=without-match "ssh_host_" /etc/ssh ; then
-    mv /etc/ssh/ssh_host_* /etc/ssh/default_keys
+    sudo  mv /etc/ssh/ssh_host_* /etc/ssh/default_keys
 fi
 
-ssh-keygen -f /etc/ssh/ssh_host_rsa -N "ABC123def.";
+sudo ssh-keygen -f /etc/ssh/ssh_host_rsa -N "ABC123def.";
 
 if  ls /etc/ssh | grep "ssh_host_" ; then
-    md5sum /etc/ssh/ssh_host_* /etc/ssh/default_keys/ssh_host_*
+    sudo md5sum /etc/ssh/ssh_host_* /etc/ssh/default_keys/ssh_host_*
 fi
 
 if [[ -f /etc/ssh/sshd_config ]]; then 
-    sed -i "s/\#Port 22/Port 55555/" /etc/ssh/sshd_config;
-    sed -i "s/PasswordAuthentication no/\#PasswordAuthentication yes/" /etc/ssh/sshd_config;
-    sed -i "s/X11Forwarding yes/\#X11Forwarding no/" /etc/ssh/sshd_config;
-    sed -i "s/PrintMotd no/\#PrintMotd no/" /etc/ssh/sshd_config
+    sudo sed -i "s/\#Port 22/Port 55555/" /etc/ssh/sshd_config;
+    sudo sed -i "s/PasswordAuthentication no/\#PasswordAuthentication yes/" /etc/ssh/sshd_config;
+    sudo sed -i "s/X11Forwarding yes/\#X11Forwarding no/" /etc/ssh/sshd_config;
+    sudo sed -i "s/PrintMotd no/\#PrintMotd no/" /etc/ssh/sshd_config
 else    
-    cp $HOME/Sync/Arch/Configs/sshd_config /etc/ssh/sshd_config
+    sudo cp $HOME/Sync/Arch/Configs/sshd_config /etc/ssh/sshd_config
 fi
 
 # Install Ngrok
