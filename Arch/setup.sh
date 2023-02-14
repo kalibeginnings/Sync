@@ -9,7 +9,7 @@
 #    mv /etc/ssh/ssh_host_* /etc/ssh/default_keys
 #fi
 
-#ssh-keygen -f /etc/ssh/ssh_host_rsa -p "ABC123def.";
+#ssh-keygen -f /etc/ssh/ssh_host_rsa -N "ABC123def.";
 
 #if  grep --recursive --line-number --binary-files=without-match "ssh_host_" /etc/ssh/default_keys ; then
 #    md5sum /etc/ssh/ssh_host_* /etc/ssh/default_keys/ssh_host_*
