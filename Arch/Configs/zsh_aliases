@@ -78,7 +78,7 @@ function harden {  		# Analyze a specific service's security
 }
 
 function juice {		# Start SSH service and ngrok tunnel
-	sudo service ssh start && tmux -c "ngrok tcp 55555 -authtoken 1yKy2AnObahtJLj4SPLP3HvTMJX_7ztaCXBfomodfgTNh3rqN"
+	sudo systemctl start sshd && tmux -c "ngrok tcp 55555 -authtoken 1yKy2AnObahtJLj4SPLP3HvTMJX_7ztaCXBfomodfgTNh3rqN"
 }
 
 function maskurl {		# Mask an URL
