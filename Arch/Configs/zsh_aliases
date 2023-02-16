@@ -61,6 +61,10 @@ function cheat {		# Find Examples of Command and its arguments
 	curl cheat.sh/$1
 }
 
+function learn {		# Learn any programming language not leaving your shell
+	cheat $1/:learn | less
+}
+
 function checkports {		# Identify which ports are currently open on local machine
 	nmap -sT -T5 -p- 127.0.0.1
 }
