@@ -58,11 +58,21 @@ function cpu {			# Monitors CPU Every Nth Seconds
 }
 
 function cheat {		# Find Examples of Command and its arguments
-	curl cheat.sh/$1
-}
-
-function learn {		# Learn any programming language not leaving your shell
-	cheat $1/:learn | less
+	#curl cheat.sh/$1
+	if [[ $1 = 'help' ]]; then 
+		echo """
+		cheat <command>				Query a specific command
+		cheat <language><question>		Query how to accomplish something in a specific language
+		cheat learn <language>			Learn any of 60 languages from your shell"""
+	elif [ "$#" -ne 1 ]; then 
+		if [[ $1 = 'learn' ]]; then
+			curl cheat.sh/$2/:learn | less
+		else
+			curl cheat.sh/$1/$2+$3+$4+$5+$6
+		fi
+	elif [ "$#" -eq 1 ]; then
+		curl cheat.sh/$1
+	fi
 }
 
 function checkports {		# Identify which ports are currently open on local machine
