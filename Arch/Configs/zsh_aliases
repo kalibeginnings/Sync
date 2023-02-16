@@ -24,6 +24,7 @@ function aliases {		# Edit my custom Alias file
 
 function pull {
 	git -C /home/blackarch/Sync pull
+	source $HOME/Sync/Arch/Configs/zsh_aliases
 }
 
 function zshrc {
