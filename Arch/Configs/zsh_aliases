@@ -28,19 +28,21 @@ function pull {
 }
 
 function zshrc {
-	sudo nano $HOME/Sync/Arch/Configs/zshrc;
-	git -C $HOME/Sync add .;
-	git -C $HOME/Sync commit -m "Saved";
-	git -C $HOME/Sync push;
-	reset
+	#sudo nano $HOME/Sync/Arch/Configs/zshrc;
+	#git -C $HOME/Sync add .;
+	#git -C $HOME/Sync commit -m "Saved";
+	#git -C $HOME/Sync push;
+	#reset
+	google-chrome-stable https://github.com/kalibeginnings/Sync/edit/main/Arch/Configs/zshrc &
 }
 
 function zshngrok {
-	sudo nano $HOME/Sync/Arch/Configs/zsh_ngrok;
-	git -C $HOME/Sync add .;
-	git -C $HOME/Sync commit -m "Saved";
-	git -C $HOME/Sync push;
-	reset
+	#sudo nano $HOME/Sync/Arch/Configs/zsh_ngrok;
+	#git -C $HOME/Sync add .;
+	#git -C $HOME/Sync commit -m "Saved";
+	#git -C $HOME/Sync push;
+	#reset
+	google-chrome-stable https://github.com/kalibeginnings/Sync/edit/main/Arch/Configs/zsh_ngrok &
 }
 
 function help {	        # Shows all of my Custom Functions
