@@ -50,7 +50,7 @@ function help {	        # Shows all of my Custom Functions
 }
 
 function fixpkg {
-	sudo pacman -Qk 2>/dev/null | grep -v ' 0 missing files' | cut -d: -f1 | while read -r package; do pacman -S "$package" --overwrite "*" --noconfirm; done
+	sudo pacman -Qk 2>/dev/null | grep -v ' 0 missing files' | cut -d: -f1 | while read -r package; do sudo pacman -S "$package" --overwrite "*" --noconfirm; done
 }
 
 function t {			# Attach last tmux session
