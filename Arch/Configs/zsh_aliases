@@ -50,7 +50,11 @@ function help {	        # Shows all of my Custom Functions
 }
 
 function pacfix {       # Fix Broken Packages
-	sudo pacman -Qk 2>/dev/null | grep -v ' 0 missing files' | cut -d: -f1 | while read -r package; do sudo pacman -S "$package" --overwrite "*" --noconfirm; done
+        if [[ $1 = 'list' ]]; then 
+                echo $(sudo pacman -Qk 2>/dev/null | grep -v ' 0 missing files' | cut -d: -f1
+        else
+	        sudo pacman -Qk 2>/dev/null | grep -v ' 0 missing files' | cut -d: -f1 | while read -r package; do sudo pacman -S "$package" --overwrite "*" --noconfirm; done
+        fi
 }
 
 function t {			# Attach last tmux session
