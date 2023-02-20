@@ -95,6 +95,15 @@ function cheat {		# Find Examples of Command and its arguments
 	fi
 }
 
+function search {		# Searches All Installed Commands
+	for i in $(find /usr/bin/ -name "$1*" | sed "s|/usr/bin/||g") ; do pacman -Qi $i >> /tmp/commands.txt 2>&1; done
+	sed -i '/Name\|Description\|URL/!d' /tmp/commands.txt
+	sed -i "s|Name|\nName|g" /tmp/commands.txt
+	cat /tmp/commands.txt
+	rm /tmp/commands.txt
+}
+
+
 function checkports {		# Identify which ports are currently open on local machine
 	nmap -sT -T5 -p- 127.0.0.1
 }
