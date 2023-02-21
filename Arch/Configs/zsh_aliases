@@ -61,7 +61,7 @@ function help {	        	# Shows all of my Custom Functions
         list[$((x+1))]=("$name:$description\n");
         done
         head=$( echo $list |  column --table --output-width=50 --separator=: | sed -n "1p")
-        body=$( echo $list | sed "/Description/d" |  column --table --output-width=50 --separator=:)
+        body=$( echo "${list[@]:1}" |  column --table --output-width=50 --separator=:)
         echo '\e[31m'$head'\e[0m'
         echo $body
 }
