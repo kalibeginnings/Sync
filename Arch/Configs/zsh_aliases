@@ -103,6 +103,13 @@ function cheat {		# Find Examples of Command and its arguments
 #	rm /tmp/commands.txt
 #}
 
+function pacsearch {
+	for i in $(pacman -Ssq $@); do 
+		pacman -Si $i | grep "Name\|Description\|URL"
+		echo "\n"; 
+	done
+}
+
 function search {
 	declare -a results
 	results[1]="  Name+       Description+                        URL\n"
