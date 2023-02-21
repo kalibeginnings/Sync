@@ -104,7 +104,7 @@ function cheat {		# Find Examples of Command and its arguments
 #}
 
 function package {
-	for i in $(pacman -Qsq $@); do echo '\e[31m'"---$i---"'\e[0m'; package $i; echo ""; done
+	for i in $(pacman -Qsq $@); do echo '\e[31m'"---$i---"'\e[0m'; pacman -Ql $i | sed -n -e 's/.*\/bin\///p' | tail -n +2; echo ""; done
 }
 
 function pacsearch {
