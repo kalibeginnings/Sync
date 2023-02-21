@@ -103,6 +103,10 @@ function cheat {		# Find Examples of Command and its arguments
 #	rm /tmp/commands.txt
 #}
 
+function package {
+	pacman -Ql $@ | sed -n -e 's/.*\/bin\///p' | tail -n +2
+}
+
 function pacsearch {
 	for i in $(pacman -Ssq $@); do 
 		pacman -Si $i | grep "Name\|Description\|URL"
