@@ -95,12 +95,27 @@ function cheat {		# Find Examples of Command and its arguments
 	fi
 }
 
-function search {		# Searches All Installed Commands
-	for i in $(find /usr/bin/ -name "$1*" | sed "s|/usr/bin/||g") ; do pacman -Qi $i >> /tmp/commands.txt 2>&1; done
-	sed -i '/Name\|Description\|URL/!d' /tmp/commands.txt
-	sed -i "s|Name|\nName|g" /tmp/commands.txt
-	cat /tmp/commands.txt
-	rm /tmp/commands.txt
+#function search {		# Searches All Installed Commands
+#	for i in $(find /usr/bin/ -name "$1*" | sed "s|/usr/bin/||g") ; do pacman -Qi $i >> /tmp/commands.txt 2>&1; done
+#	sed -i '/Name\|Description\|URL/!d' /tmp/commands.txt
+#	sed -i "s|Name|\nName|g" /tmp/commands.txt
+#	cat /tmp/commands.txt
+#	rm /tmp/commands.txt
+#}
+
+function search {
+	declare -a results
+	results[1]="  Name+       Description+                        URL\n"
+	x=1
+	list=$(pacman -Ssq $@)
+	for i in $(echo $list); do
+		x=$((x+1))
+		name=$i
+		description=$(pacman -Qi $i 2>&1 | grep "Description" | sed "s|Description ||g" )
+		url=$(pacman -Qi $i 2>&1 | grep "URL" | sed "s|URL ||g")
+		results[$x]="$name+$description+$url\n";
+	done
+	echo $results | column --table --table-columns=3 --separator=+ --table-wrap=3
 }
 
 
