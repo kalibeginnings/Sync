@@ -8,7 +8,7 @@ function pacupdate {   	# Complete update and upgrade
 	sudo pacman -Rcns $(sudo pacman -Qdtq)
 }
 
-function mirrors {
+function mirrors {		# Update my mirror list with the fastest mirrors
 	sudo reflector --latest 20 --protocol https --sort rate --save /etc/pacman.d/mirrorlist
 }
 
@@ -22,12 +22,12 @@ function aliases {		# Edit my custom Alias file
 	
 }
 
-function pull {
+function pull {			# Pull changes into my Sync directory
 	git -C /home/blackarch/Sync pull
 	source $HOME/Sync/Arch/Configs/zsh_aliases
 }
 
-function zshrc {
+function zshrc {		# Edit zshrc file in github
 	#sudo nano $HOME/Sync/Arch/Configs/zshrc;
 	#git -C $HOME/Sync add .;
 	#git -C $HOME/Sync commit -m "Saved";
@@ -36,7 +36,7 @@ function zshrc {
 	google-chrome-stable https://github.com/kalibeginnings/Sync/edit/main/Arch/Configs/zshrc && pull
 }
 
-function zshngrok {
+function zshngrok {		# Edit ngrok file in github
 	#sudo nano $HOME/Sync/Arch/Configs/zsh_ngrok;
 	#git -C $HOME/Sync add .;
 	#git -C $HOME/Sync commit -m "Saved";
@@ -45,11 +45,11 @@ function zshngrok {
 	google-chrome-stable https://github.com/kalibeginnings/Sync/edit/main/Arch/Configs/zsh_ngrok &
 }
 
-function help {	        # Shows all of my Custom Functions
+function help {	        	# Shows all of my Custom Functions
         grep function $HOME/.zsh_aliases | sed -e 's#function#*#' -e 's#{# #' -e '/alias/d' | sort
 }
 
-function pacfix {       # Fix Broken Packages
+function pacfix {       	# Fix Broken Packages
         if [[ $1 = 'list' ]]; then 
                 echo "The following packages are broken:"
                 echo $(sudo pacman -Qk 2>/dev/null | grep -v ' 0 missing files' | cut -d: -f1)
@@ -67,7 +67,7 @@ function e {			# Exit Session
 	exit
 }
 
-function myip {		# Show if Your IP is Hidden or Not
+function myip {			# Show if Your IP is Hidden or Not
 	echo "\n[*] Your IP is" $(curl -s https://dnsleaktest.com | grep Hello | cut -d " " -f 3 | cut -d "<" -f 1)
 }
 
@@ -95,7 +95,7 @@ function cheat {		# Find Examples of Command and its arguments
 	fi
 }
 
-#function search {		# Searches All Installed Commands
+#function search {		
 #	for i in $(find /usr/bin/ -name "$1*" | sed "s|/usr/bin/||g") ; do pacman -Qi $i >> /tmp/commands.txt 2>&1; done
 #	sed -i '/Name\|Description\|URL/!d' /tmp/commands.txt
 #	sed -i "s|Name|\nName|g" /tmp/commands.txt
@@ -103,18 +103,18 @@ function cheat {		# Find Examples of Command and its arguments
 #	rm /tmp/commands.txt
 #}
 
-function package {
+function package {			# Find Commands associated with a package
 	for i in $(pacman -Qsq $@); do echo '\e[31m'"---$i---"'\e[0m'; pacman -Ql $i | sed -n -e 's/.*\/bin\///p' | tail -n +2; echo ""; done
 }
 
-function pacsearch {
+function pacsearch {			# Search a descriptive list of packages
 	for i in $(pacman -Ssq $@); do 
 		pacman -Si $i | grep "Name\|Description\|URL"
 		echo "\n"; 
 	done
 }
 
-function search {
+function search {			# Search a descriptive list of packages in a table
 	declare -a results
 	results[1]="  Name+       Description+                        URL\n"
 	x=1
