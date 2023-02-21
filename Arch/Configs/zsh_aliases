@@ -2,6 +2,7 @@ PATH=$PATH:$HOME/Tools:
 echo "\n[*] Your IP is" $(curl -s https://dnsleaktest.com | grep Hello | cut -d " " -f 3 | cut -d "<" -f 1)"\n"
 
 #My Functions
+
 function pacupdate {   	# Complete update and upgrade
 	git -C $HOME/Sync pull;
 	sudo pacman -Syyu;
