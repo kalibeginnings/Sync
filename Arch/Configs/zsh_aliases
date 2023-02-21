@@ -54,7 +54,7 @@ function pacfix {       	# Fix Broken Packages
                 echo "The following packages are broken:"
                 echo $(sudo pacman -Qk 2>/dev/null | grep -v ' 0 missing files' | cut -d: -f1)
                 echo ""
-else;
+	else;
 	        sudo pacman -Qk 2>/dev/null | grep -v ' 0 missing files' | cut -d: -f1 | while read -r package; do sudo pacman -S "$package" --overwrite "*" --noconfirm; done
         fi
 }
