@@ -111,8 +111,8 @@ function search {
 	for i in $(echo $list); do
 		x=$((x+1))
 		name=$i
-		description=$(pacman -Qi $i 2>&1 | grep "Description" | sed "s|Description ||g" )
-		url=$(pacman -Qi $i 2>&1 | grep "URL" | sed "s|URL ||g")
+		description=$(pacman -Si $i 2>&1 | grep "Description" | sed "s|Description ||g" )
+		url=$(pacman -Si $i 2>&1 | grep "URL" | sed "s|URL ||g")
 		results[$x]="$name+$description+$url\n";
 	done
 	echo $results | column --table --table-columns=3 --separator=+ --table-wrap=3
