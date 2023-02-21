@@ -46,8 +46,24 @@ function zshngrok {		# Edit ngrok file in github
 	google-chrome-stable https://github.com/kalibeginnings/Sync/edit/main/Arch/Configs/zsh_ngrok &
 }
 
+#function help {	        	# Shows all of my Custom Functions
+#        grep function $HOME/.zsh_aliases | sed -e 's#function#*#' -e 's#{# #' -e '/alias/d' | sort
+#}
+
 function help {	        	# Shows all of my Custom Functions
-        grep function $HOME/.zsh_aliases | sed -e 's#function#*#' -e 's#{# #' -e '/alias/d' | sort
+        list=()
+        list[1]=(" NAME:    DESCRIPTION\n")
+        x=0
+        for i in {1..$(grep "function" .zsh_aliases| sed "/#function/d" | wc -l)}; do 
+        x=$((x+1))
+        name=$(grep "function" $HOME/.zsh_aliases| sed "/#function/d" | awk '{print $2}' | sed -n "${x}p")
+        description=$(grep "function" .zsh_aliases| sed "/#function/d" | cut -d# -f2 | sed -n "${x}p")
+        list[$((x+1))]=("$name:$description\n");
+        done
+        head=$( echo $list |  column --table --output-width=50 --separator=: | sed -n "1p")
+        body=$( echo $list | sed "/Description/d" |  column --table --output-width=50 --separator=:)
+        echo '\e[31m'$head'\e[0m'
+        echo $body
 }
 
 function pacfix {       	# Fix Broken Packages
