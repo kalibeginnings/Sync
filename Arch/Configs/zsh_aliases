@@ -191,10 +191,69 @@ function pacfix {
     fi
 }
 
+_t() {
+    local cur=${COMP_WORDS[COMP_CWORD]}
+    local prev=${COMP_WORDS[COMP_CWORD-1]}
+    local options="new help"
 
-function t {			# Attach last tmux session
-	tmux attach
+    if [[ $prev == "tmux" ]]; then
+        options+=" new-session detach attach kill-session switch-client list-sessions \
+            list-clients list-commands list-keys list-buffers capture-pane \
+            choose-tree clock confirm-before copy-mode display-message \
+            display-panes find-window join-pane load-buffer lock-server \
+            choose-buffer move-window next-window next-layout paste-buffer \
+            pipe-pane previous-window refresh-client rename-session \
+            rename-window resize-pane resize-window rotate-window \
+            select-layout select-pane select-window send-keys send-prefix \
+            server-info set-buffer show-environment show-messages \
+            source-file split-window swap-pane swap-window \
+            unlink-window wait-for"
+    fi
+
+    COMPREPLY=( $(compgen -W "$options" -- $cur) )
+    return 0
 }
+complete -F _t t
+
+
+function t {
+  if [[ $# -eq 0 ]]; then
+    if ! tmux ls >/dev/null 2>&1; then
+      tmux new-session -s main
+    else
+      tmux attach-session
+    fi
+  else
+    case "$1" in
+      -h|help)
+        echo "Usage: t [-n SESSION] [TMUX_OPTIONS...]"
+        echo ""
+        echo "Start a new tmux session or attach to an existing one."
+        echo ""
+        echo "Options:"
+        echo "  -n, --new SESSION    Create a new tmux session with the specified name."
+        echo "  -h, --help           Show this help message and exit."
+        echo ""
+        echo "Additional options for tmux (use 'tmux man' for more info):"
+        echo "  -2                    Force tmux to assume the terminal supports 256 colors."
+        echo "  -C                    Start a new session but don't attach to it."
+        echo "  -f FILENAME           Specify an alternate configuration file."
+        echo "  -L SESSIONNAME        Name the session (default: last component of the current path)."
+        echo "  -S SOCKETNAME         Connect to a specified socket."
+        echo "  -u                    Target the most recently used session."
+        echo ""
+        echo "Any additional arguments are passed to tmux as-is."
+        ;;
+      -n|new)
+        tmux new-session -s "${2:-main}"
+        ;;
+      *)
+        tmux "$@"
+        ;;
+    esac
+  fi
+}
+
 
 function e {			# Exit Session
 	exit
