@@ -59,8 +59,6 @@ function aliases {
     fi
 }
 
-
-
 function pull {			# Pull changes into my Sync directory
 	git -C /home/blackarch/Sync pull
 	source $HOME/Sync/Arch/Configs/zsh_aliases
@@ -111,8 +109,6 @@ function zshrc {
         fi
     fi
 }
-
-
 
 function zsh_ngrok {
     local help_displayed=false
@@ -182,16 +178,19 @@ function show_aliases() {
   done
 }
 
-
-function pacfix {       	# Fix Broken Packages
-        if [[ $1 = 'list' ]]; then 
-                echo "The following packages are broken:"
-                echo $(sudo pacman -Qk 2>/dev/null | grep -v ' 0 missing files' | cut -d: -f1)
-                echo ""
-	else;
-	        sudo pacman -Qk 2>/dev/null | grep -v ' 0 missing files' | cut -d: -f1 | while read -r package; do sudo pacman -S "$package" --overwrite "*" --noconfirm; done
-        fi
+function pacfix {
+    if [[ $1 == "list" ]]; then
+        echo "The following packages are broken:"
+        echo $(sudo pacman -Qk | grep -v ' 0 missing files' | cut -d: -f1)
+        echo ""
+    else
+        sudo pacman -Syyu --needed
+        sudo pacman -Qk | grep -v ' 0 missing files' | cut -d: -f1 | while read -r package_name; do
+            sudo pacman -S "$package_name" --overwrite "*" --noconfirm
+        done
+    fi
 }
+
 
 function t {			# Attach last tmux session
 	tmux attach
