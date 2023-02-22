@@ -325,9 +325,65 @@ function search {			# Search a descriptive list of packages in a table
 }
 
 
-function checkports {		# Identify which ports are currently open on local machine
-	nmap -sT -T5 -p- 127.0.0.1
+function checkports {
+    # Identify which ports are currently open on local machine
+
+    local usage="Usage: checkports [-h|--help] [-a|--all] [-t <timing>] [-r <protocol>] [<IP address>]"
+    local helpmsg="Options:
+    -h, --help         display this help and exit
+    -a, --all          scan all ports (not just top 1000)
+    -t, --timing       set timing template (0-5) (higher is faster but less accurate)
+    -r, --protocol     set protocol to use for scanning (TCP or UDP)
+    "
+    local ip="127.0.0.1"
+    local ports=""
+
+    if [ $# -eq 0 ]; then
+        nmap -sT -T5 -p- --all 127.0.0.1
+    fi
+
+
+    # Parse command-line options
+    while [[ $# -gt 0 ]]; do
+    case "$1" in
+        -h|--help)
+        echo "$usage"
+        echo "$helpmsg"
+        return 0
+        ;;
+        -a|--all)
+        ports="-p-"
+        ;;
+        -t|--timing)
+        if [[ "$2" =~ ^[0-5]$ ]]; then
+            timing="-T$2"
+            shift
+        else
+            echo "Error: Invalid timing value. Timing must be between 0-5."
+            echo "$usage"
+            return 1
+        fi
+        ;;
+        -r|--protocol)
+        if [[ "$2" =~ ^(TCP|UDP)$ ]]; then
+            protocol="-s$2"
+            shift
+        else
+            echo "Error: Invalid protocol specified. Protocol must be either TCP or UDP."
+            echo "$usage"
+            return 1
+        fi
+        ;;
+        *)
+        ip="$1"
+        ;;
+    esac
+    shift
+    done
+
+  nmap $protocol $timing $ports $ip
 }
+
 
 function services {		# Show which services are currently running
 	systemctl | grep running
