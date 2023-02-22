@@ -371,7 +371,9 @@ function checkports {
         fi
         ;;
         *)
-        ip="$1"
+        if ! [[ "$1" =~ ^[0-9]+\-[0-9]+$ ]]; then
+            ip="$1"
+        fi
 
         ;;
     esac
