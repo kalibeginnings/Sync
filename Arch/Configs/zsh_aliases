@@ -18,6 +18,7 @@ function aliases {
 
     if [ "$#" -eq 0 ]; then
         nano "$HOME/.zsh_aliases" &
+        fg %1
         wait $!
         git -C Sync add Arch/Configs/zsh_aliases
         git -C Sync commit -m 'Saved zsh_aliases'
@@ -28,7 +29,7 @@ function aliases {
 
     case "$1" in
         "-w" | "--web")
-            google-chrome "https://github.com/kalibeginnings/Sync/edit/main/Arch/Configs/zsh_aliases"
+            firefox "https://github.com/kalibeginnings/Sync/edit/main/Arch/Configs/zsh_aliases"
             shift
             ;;
         "-u" | "--update")
