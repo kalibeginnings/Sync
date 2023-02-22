@@ -205,25 +205,31 @@ function cpu {			# Monitors CPU Every Nth Seconds
 	iostat -c $1
 }
 
-function cheat {		# Find Examples of Command and its arguments
-	#curl cheat.sh/$1
-	if [[ $1 = 'help' ]]; then 
-		echo """
-		cheat <command>				Query a specific command
-		cheat <language><question>		Query how to accomplish something in a specific language
-		cheat learn <language>			Learn any of 60 languages from your shell"""
-	elif [[ $1 = 'shell' ]]; then
-		cheat-sh --shell
-	elif [ "$#" -ne 1 ]; then 
-		if [[ $1 = 'learn' ]]; then
-			curl cheat.sh/$2/:learn | less
-		else
-			curl cheat.sh/$1/$2+$3+$4+$5+$6
-		fi
-	elif [ "$#" -eq 1 ]; then
-		curl cheat.sh/$1
-	fi
+function cheat {
+    case "$1" in
+        "help"|"--help"|"-h")
+            cat << EOF
+cheat <command>             Query a specific command
+cheat <language><question>  Query how to accomplish something in a specific language
+cheat learn <language>      Learn any of 60 languages from your shell
+EOF
+            ;;
+        "shell"|"--shell"|"-s")
+            cheat-sh --shell
+            ;;
+        "learn"|"--learn"|"-l")
+            curl -s cheat.sh/$2/:learn | less
+            ;;
+        *)
+            if [ $# -gt 1 ]; then
+                curl -s cheat.sh/$*
+            else
+                curl -s cheat.sh/$1
+            fi
+            ;;
+    esac
 }
+
 
 #function search {		
 #	for i in $(find /usr/bin/ -name "$1*" | sed "s|/usr/bin/||g") ; do pacman -Qi $i >> /tmp/commands.txt 2>&1; done
