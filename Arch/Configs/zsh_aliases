@@ -385,7 +385,7 @@ function checkports {
  	else
     		ports="$1"
 	fi
-     nmap $protocol $timing $ports $ip
+    nmap $protocol $timing $ports $ip
   
 }
 
