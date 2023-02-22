@@ -371,12 +371,12 @@ function checkports {
         fi
         ;;
         *)
-        ip="$1"
+        ports="-p$1"
         ;;
     esac
     shift
     done
-    
+
     if [ $# -eq 0 ]; then
         nmap -sT -T5 -p- --all 127.0.0.1
     else
