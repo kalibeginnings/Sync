@@ -17,28 +17,32 @@ function aliases {
     local help_displayed=false
 
     if [ "$#" -eq 0 ]; then
-        nano "$HOME/.zshrc"
+        nano "$HOME/.zsh_aliases" &
+        wait $!
+        git -C Sync add Arch/Configs/zsh_aliases
+        git -C Sync commit -m 'Saved zsh_aliases'
+        git -C Sync push
         pull
         return
     fi
 
     case "$1" in
         "-w" | "--web")
-            google-chrome "https://github.com/kalibeginnings/Sync/edit/main/Arch/Configs/zshrc"
+            google-chrome "https://github.com/kalibeginnings/Sync/edit/main/Arch/Configs/zsh_aliases"
             shift
             ;;
         "-u" | "--update")
-            git -C Sync add .
+            git -C Sync add Arch/Configs/zsh_aliases
             git -C Sync commit -m 'Saved'
             git -C Sync push
             pull
             shift
             ;;
         "-h" | "--help")
-            echo "Syntax: zshrc [-w|--web|-u|--update|-h|--help]"
-            echo "Description: Edit and synchronize the .zshrc file."
-            echo "  -w, --web      Open the .zshrc file on GitHub with Google Chrome."
-            echo "  -u, --update   Add, commit, and push changes to the .zshrc file to GitHub, and then pull from GitHub."
+            echo "Syntax: aliases [-w|--web|-u|--update|-h|--help]"
+            echo "Description: Edit and synchronize the .zsh_aliases file."
+            echo "  -w, --web      Open the .zsh_aliases file on GitHub with Google Chrome."
+            echo "  -u, --update   Add, commit, and push changes to the .zsh_aliases file to GitHub, and then pull from GitHub."
             echo "  -h, --help     Display this help message."
             help_displayed=true
             ;;
@@ -51,7 +55,7 @@ function aliases {
     # Check if there are any remaining arguments after processing the first option
     if [ "$#" -ne 0 ]; then
         if ! $help_displayed || [ "$1" != "-h" -a "$1" != "--help" ]; then
-            zshrc "$@"
+            aliases "$@"
         fi
     fi
 }
@@ -63,11 +67,15 @@ function pull {			# Pull changes into my Sync directory
 	source $HOME/Sync/Arch/Configs/zsh_aliases
 }
 
-zshrc() {
+function zshrc {
     local help_displayed=false
 
     if [ "$#" -eq 0 ]; then
-        nano "$HOME/.zshrc"
+        nano "$HOME/.zshrc" &
+        wait $!
+        git -C Sync add Arch/Configs/zshrc
+        git -C Sync commit -m 'Saved zshrc'
+        git -C Sync push
         pull
         return
     fi
@@ -108,18 +116,52 @@ zshrc() {
 
 
 
-function zshngrok {		# Edit ngrok file in github
-	#sudo nano $HOME/Sync/Arch/Configs/zsh_ngrok;
-	#git -C $HOME/Sync add .;
-	#git -C $HOME/Sync commit -m "Saved";
-	#git -C $HOME/Sync push;
-	#reset
-	google-chrome-stable https://github.com/kalibeginnings/Sync/edit/main/Arch/Configs/zsh_ngrok &
-}
+function zsh_ngrok {
+    local help_displayed=false
 
-#function help {	        	# Shows all of my Custom Functions
-#        grep function $HOME/.zsh_aliases | sed -e 's#function#*#' -e 's#{# #' -e '/alias/d' | sort
-#}
+    if [ "$#" -eq 0 ]; then
+        nano "$HOME/.zsh_ngrok" &
+        wait $!
+        git -C Sync add Arch/Configs/zsh_ngrok
+        git -C Sync commit -m 'Saved zsh_ngrok'
+        git -C Sync push
+        pull
+        return
+    fi
+
+    case "$1" in
+        "-w" | "--web")
+            google-chrome "https://github.com/kalibeginnings/Sync/edit/main/Arch/Configs/zsh_ngrok"
+            shift
+            ;;
+        "-u" | "--update")
+            git -C Sync add .
+            git -C Sync commit -m 'Saved'
+            git -C Sync push
+            pull
+            shift
+            ;;
+        "-h" | "--help")
+            echo "Syntax: zsh_ngrok [-w|--web|-u|--update|-h|--help]"
+            echo "Description: Edit and synchronize the .zsh_ngrok file."
+            echo "  -w, --web      Open the .zsh_ngrok file on GitHub with Google Chrome."
+            echo "  -u, --update   Add, commit, and push changes to the .zsh_ngrok file to GitHub, and then pull from GitHub."
+            echo "  -h, --help     Display this help message."
+            help_displayed=true
+            ;;
+        *)
+            echo "Invalid option: $1"
+            return 1
+            ;;
+    esac
+
+    # Check if there are any remaining arguments after processing the first option
+    if [ "$#" -ne 0 ]; then
+        if ! $help_displayed || [ "$1" != "-h" -a "$1" != "--help" ]; then
+            zsh_ngrok "$@"
+        fi
+    fi
+}
 
 function help {	        	# Shows all of my Custom Functions
         list=()
