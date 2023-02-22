@@ -18,7 +18,6 @@ function aliases {
 
     if [ "$#" -eq 0 ]; then
         nano "$HOME/.zsh_aliases" 
-        sleep 2
         fg %nano
         wait $!
         git -C Sync add Arch/Configs/zsh_aliases
