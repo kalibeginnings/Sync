@@ -13,29 +13,100 @@ function mirrors {		# Update my mirror list with the fastest mirrors
 	sudo reflector --latest 20 --protocol https --sort rate --save /etc/pacman.d/mirrorlist
 }
 
-function aliases {		# Edit my custom Alias file
-	#sudo nano $HOME/Sync/Arch/Configs/zsh_aliases;
-	#git -C $HOME/Sync add .;
-	#git -C $HOME/Sync commit -m "Saved";
-	#git -C $HOME/Sync push;
-	#reset
-	google-chrome-stable https://github.com/kalibeginnings/Sync/edit/main/Arch/Configs/zsh_aliases &
-	
+function aliases {
+    local help_displayed=false
+
+    if [ "$#" -eq 0 ]; then
+        nano "$HOME/.zshrc"
+        pull
+        return
+    fi
+
+    case "$1" in
+        "-w" | "--web")
+            google-chrome "https://github.com/kalibeginnings/Sync/edit/main/Arch/Configs/zshrc"
+            shift
+            ;;
+        "-u" | "--update")
+            git -C Sync add .
+            git -C Sync commit -m 'Saved'
+            git -C Sync push
+            pull
+            shift
+            ;;
+        "-h" | "--help")
+            echo "Syntax: zshrc [-w|--web|-u|--update|-h|--help]"
+            echo "Description: Edit and synchronize the .zshrc file."
+            echo "  -w, --web      Open the .zshrc file on GitHub with Google Chrome."
+            echo "  -u, --update   Add, commit, and push changes to the .zshrc file to GitHub, and then pull from GitHub."
+            echo "  -h, --help     Display this help message."
+            help_displayed=true
+            ;;
+        *)
+            echo "Invalid option: $1"
+            return 1
+            ;;
+    esac
+
+    # Check if there are any remaining arguments after processing the first option
+    if [ "$#" -ne 0 ]; then
+        if ! $help_displayed || [ "$1" != "-h" -a "$1" != "--help" ]; then
+            zshrc "$@"
+        fi
+    fi
 }
+
+
 
 function pull {			# Pull changes into my Sync directory
 	git -C /home/blackarch/Sync pull
 	source $HOME/Sync/Arch/Configs/zsh_aliases
 }
 
-function zshrc {		# Edit zshrc file in github
-	#sudo nano $HOME/Sync/Arch/Configs/zshrc;
-	#git -C $HOME/Sync add .;
-	#git -C $HOME/Sync commit -m "Saved";
-	#git -C $HOME/Sync push;
-	#reset
-	google-chrome-stable https://github.com/kalibeginnings/Sync/edit/main/Arch/Configs/zshrc && pull
+zshrc() {
+    local help_displayed=false
+
+    if [ "$#" -eq 0 ]; then
+        nano "$HOME/.zshrc"
+        pull
+        return
+    fi
+
+    case "$1" in
+        "-w" | "--web")
+            google-chrome "https://github.com/kalibeginnings/Sync/edit/main/Arch/Configs/zshrc"
+            shift
+            ;;
+        "-u" | "--update")
+            git -C Sync add .
+            git -C Sync commit -m 'Saved'
+            git -C Sync push
+            pull
+            shift
+            ;;
+        "-h" | "--help")
+            echo "Syntax: zshrc [-w|--web|-u|--update|-h|--help]"
+            echo "Description: Edit and synchronize the .zshrc file."
+            echo "  -w, --web      Open the .zshrc file on GitHub with Google Chrome."
+            echo "  -u, --update   Add, commit, and push changes to the .zshrc file to GitHub, and then pull from GitHub."
+            echo "  -h, --help     Display this help message."
+            help_displayed=true
+            ;;
+        *)
+            echo "Invalid option: $1"
+            return 1
+            ;;
+    esac
+
+    # Check if there are any remaining arguments after processing the first option
+    if [ "$#" -ne 0 ]; then
+        if ! $help_displayed || [ "$1" != "-h" -a "$1" != "--help" ]; then
+            zshrc "$@"
+        fi
+    fi
 }
+
+
 
 function zshngrok {		# Edit ngrok file in github
 	#sudo nano $HOME/Sync/Arch/Configs/zsh_ngrok;
