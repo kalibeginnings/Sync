@@ -17,9 +17,7 @@ function aliases {
     local help_displayed=false
 
     if [ "$#" -eq 0 ]; then
-        nano "$HOME/.zsh_aliases" 
-        #fg %nano
-        #wait $!
+        nano "$HOME/.zsh_aliases"
         git -C Sync add Arch/Configs/zsh_aliases
         git -C Sync commit -m 'Saved zsh_aliases'
         git -C Sync push
@@ -42,7 +40,7 @@ function aliases {
         "-h" | "--help")
             echo "Syntax: aliases [-w|--web|-u|--update|-h|--help]"
             echo "Description: Edit and synchronize the .zsh_aliases file."
-            echo "  -w, --web      Open the .zsh_aliases file on GitHub with Google Chrome."
+            echo "  -w, --web      Open the .zsh_aliases file on GitHub with firefox."
             echo "  -u, --update   Add, commit, and push changes to the .zsh_aliases file to GitHub, and then pull from GitHub."
             echo "  -h, --help     Display this help message."
             help_displayed=true
@@ -72,8 +70,7 @@ function zshrc {
     local help_displayed=false
 
     if [ "$#" -eq 0 ]; then
-        nano "$HOME/.zshrc" &
-        wait $!
+        nano "$HOME/.zshrc"
         git -C Sync add Arch/Configs/zshrc
         git -C Sync commit -m 'Saved zshrc'
         git -C Sync push
@@ -83,7 +80,7 @@ function zshrc {
 
     case "$1" in
         "-w" | "--web")
-            google-chrome "https://github.com/kalibeginnings/Sync/edit/main/Arch/Configs/zshrc"
+            firefox "https://github.com/kalibeginnings/Sync/edit/main/Arch/Configs/zshrc"
             shift
             ;;
         "-u" | "--update")
@@ -96,7 +93,7 @@ function zshrc {
         "-h" | "--help")
             echo "Syntax: zshrc [-w|--web|-u|--update|-h|--help]"
             echo "Description: Edit and synchronize the .zshrc file."
-            echo "  -w, --web      Open the .zshrc file on GitHub with Google Chrome."
+            echo "  -w, --web      Open the .zshrc file on GitHub with Firefox."
             echo "  -u, --update   Add, commit, and push changes to the .zshrc file to GitHub, and then pull from GitHub."
             echo "  -h, --help     Display this help message."
             help_displayed=true
@@ -121,8 +118,7 @@ function zsh_ngrok {
     local help_displayed=false
 
     if [ "$#" -eq 0 ]; then
-        nano "$HOME/.zsh_ngrok" &
-        wait $!
+        nano "$HOME/.zsh_ngrok"
         git -C Sync add Arch/Configs/zsh_ngrok
         git -C Sync commit -m 'Saved zsh_ngrok'
         git -C Sync push
@@ -132,7 +128,7 @@ function zsh_ngrok {
 
     case "$1" in
         "-w" | "--web")
-            google-chrome "https://github.com/kalibeginnings/Sync/edit/main/Arch/Configs/zsh_ngrok"
+            firefox "https://github.com/kalibeginnings/Sync/edit/main/Arch/Configs/zsh_ngrok"
             shift
             ;;
         "-u" | "--update")
@@ -145,7 +141,7 @@ function zsh_ngrok {
         "-h" | "--help")
             echo "Syntax: zsh_ngrok [-w|--web|-u|--update|-h|--help]"
             echo "Description: Edit and synchronize the .zsh_ngrok file."
-            echo "  -w, --web      Open the .zsh_ngrok file on GitHub with Google Chrome."
+            echo "  -w, --web      Open the .zsh_ngrok file on GitHub with Firefox."
             echo "  -u, --update   Add, commit, and push changes to the .zsh_ngrok file to GitHub, and then pull from GitHub."
             echo "  -h, --help     Display this help message."
             help_displayed=true
