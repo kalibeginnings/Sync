@@ -195,20 +195,17 @@ _t() {
     local cur=${COMP_WORDS[COMP_CWORD]}
     local prev=${COMP_WORDS[COMP_CWORD-1]}
     local options="new help"
-
-    if [[ $prev == "tmux" ]]; then
-        options+=" new-session detach attach kill-session switch-client list-sessions \
-            list-clients list-commands list-keys list-buffers capture-pane \
-            choose-tree clock confirm-before copy-mode display-message \
-            display-panes find-window join-pane load-buffer lock-server \
-            choose-buffer move-window next-window next-layout paste-buffer \
-            pipe-pane previous-window refresh-client rename-session \
-            rename-window resize-pane resize-window rotate-window \
-            select-layout select-pane select-window send-keys send-prefix \
-            server-info set-buffer show-environment show-messages \
-            source-file split-window swap-pane swap-window \
-            unlink-window wait-for"
-    fi
+    options+=" new-session detach attach kill-session switch-client list-sessions \
+    list-clients list-commands list-keys list-buffers capture-pane \
+    choose-tree clock confirm-before copy-mode display-message \
+    display-panes find-window join-pane load-buffer lock-server \
+    choose-buffer move-window next-window next-layout paste-buffer \
+    pipe-pane previous-window refresh-client rename-session \
+    rename-window resize-pane resize-window rotate-window \
+    select-layout select-pane select-window send-keys send-prefix \
+    server-info set-buffer show-environment show-messages \
+    source-file split-window swap-pane swap-window \
+    unlink-window wait-for"
 
     COMPREPLY=( $(compgen -W "$options" -- $cur) )
     return 0
