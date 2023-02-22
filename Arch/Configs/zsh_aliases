@@ -179,6 +179,13 @@ function help {	        	# Shows all of my Custom Functions
         echo $body
 }
 
+function show_aliases() {
+  alias | sed 's/=.*//' | while read -r alias_name; do
+    printf "%-20s %s\n" "$alias_name" "${(A)aliases[$alias_name]}"
+  done
+}
+
+
 function pacfix {       	# Fix Broken Packages
         if [[ $1 = 'list' ]]; then 
                 echo "The following packages are broken:"
