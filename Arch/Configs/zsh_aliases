@@ -3,7 +3,6 @@ echo "\n[*] Your IP is" $(curl -s https://dnsleaktest.com | grep Hello | cut -d 
 
 #My Functions
 
-
 function pacupdate {   	# Complete update and upgrade
 	git -C $HOME/Sync pull;
 	sudo pacman -Syyu;
