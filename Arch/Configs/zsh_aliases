@@ -338,10 +338,6 @@ function checkports {
     local ip="127.0.0.1"
     local ports=""
 
-    if [ $# -eq 0 ]; then
-        nmap -sT -T5 -p- --all 127.0.0.1
-    fi
-
 
     # Parse command-line options
     while [[ $# -gt 0 ]]; do
@@ -380,8 +376,13 @@ function checkports {
     esac
     shift
     done
-
-  nmap $protocol $timing $ports $ip
+    
+    if [ $# -eq 0 ]; then
+        nmap -sT -T5 -p- --all 127.0.0.1
+    else
+        nmap $protocol $timing $ports $ip
+    fi
+  
 }
 
 
