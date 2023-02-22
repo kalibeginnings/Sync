@@ -371,7 +371,11 @@ function checkports {
         fi
         ;;
         *)
-        ports="-p$1"
+        if [[ "$1" == *-* ]]; then
+            ports="-p${1}"
+        else
+            ports="--all"
+        fi
         ;;
     esac
     shift
