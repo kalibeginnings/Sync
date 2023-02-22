@@ -17,8 +17,8 @@ function aliases {
     local help_displayed=false
 
     if [ "$#" -eq 0 ]; then
-        nano "$HOME/.zsh_aliases" &&
-        sleep 1
+        nano "$HOME/.zsh_aliases" &
+        sleep 10
         fg %1
         wait $!
         git -C Sync add Arch/Configs/zsh_aliases
