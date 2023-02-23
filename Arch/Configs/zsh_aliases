@@ -394,7 +394,6 @@ function checkports {
 
 
 function services {
-    function show_services {
         clear
         if [ $# -ne 0 ]; then
             units=$(systemctl list-units)
@@ -411,7 +410,7 @@ function services {
         echo "\n" "Please Select a Service: " 
         read -r choice
         if ! [[ "$choice" =~ '^[0-9]+$' ]]; then 
-            show_services "$choice"
+            services "$choice"
         fi
         service=$(echo $message | sed -n "$(($choice+1))p" | awk '{print $2}')
         systemctl status $service | cat
@@ -447,7 +446,6 @@ function services {
         clear
         
     }
-    show_services
 
     case $option in
         1) sudo systemctl bind $service;;
