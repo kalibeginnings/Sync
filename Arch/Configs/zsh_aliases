@@ -395,9 +395,12 @@ function checkports {
 
 function services {
     function show_services {
-        if [[ $# -ne 0 ]]; then
-            list=$(systemctl list-units | grep "$@")
-            body=$(echo $list | sed  "1d" | cat -b)
+        clear
+        if [ $# -ne 0 ]; then
+            units=$(systemctl list-units)
+            list=$(echo $units | grep "$@")
+            header=$(echo $units | sed -n "1p")
+            body=$(echo $list | cat -b)
         else 
             list=$(systemctl list-units --type=service --state=running | head -n -4)
             header=$(echo $list | sed -n "1p")
@@ -407,8 +410,7 @@ function services {
         echo $message
         echo "\n" "Please Select a Service: " 
         read -r choice
-        clear
-        if [[ $1 =~ '^[0-9]+$' ]]; then 
+        if ! [[ $1 =~ '^[0-9]+$' ]]; then 
             show_services "$choice"
         fi
         service=$(echo $message | sed -n "$(($choice+1))p" | awk '{print $2}')
