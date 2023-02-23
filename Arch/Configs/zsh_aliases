@@ -336,7 +336,11 @@ function checkports {
     -r, --protocol     set protocol to use for scanning (TCP or UDP)
     "
     local ip="127.0.0.1"
-    local ports=""
+    if [[ "$#" -eq 0 ]]; then
+    		ports="-p-"
+    else
+        local ports=""
+    fi
 
 
     # Parse command-line options
