@@ -392,9 +392,92 @@ function checkports {
 }
 
 
-function services {		# Show which services are currently running
-	systemctl | grep running
+
+function services {
+    function show_services {
+        if [[ $# -ne 0 ]]; then
+            list=$(systemctl list-units | grep "$@")
+            body=$(echo $list | sed  "1d" | cat -b)
+        else 
+            list=$(systemctl list-units --type=service --state=running | head -n -4)
+            header=$(echo $list | sed -n "1p")
+            body=$(echo $list | sed  "1d" | cat -b)
+        fi
+        message="          $header\n$body"
+        echo $message
+        echo "\n" "Please Select a Service: " 
+        read -r choice
+        clear
+        if [[ $1 =~ '^[0-9]+$' ]]; then 
+            show_services "$choice"
+        fi
+        service=$(echo $message | sed -n "$(($choice+1))p" | awk '{print $2}')
+        systemctl status $service | cat
+        echo "\n" """Please Select an Option: 
+        1) bind                                 -- Bind mount a path from the host into a unit's namespace
+        2) cat                                  -- Show the source unit files and drop-ins
+        3) clean                                -- Remove configuration, state, cache, logs or runtime data of units
+        4) help                                 -- Show documentation for specified units
+        5) kill                                 -- Send signal to processes of a unit
+        6) reload                               -- Reload one or more units
+        7) list-dependencies                    -- Show unit dependency tree
+        8) list-sockets                         -- List sockets
+        9) list-timers                          -- List timers
+        10) list-units                          -- List units 
+        11) restart                             -- Start or restart one or more units 
+        12) show                                -- Show properties of one or more units/jobs or the manager
+        13) start                               -- Start (activate) one or more units
+        14) status                              -- Show runtime status of one or more units
+        15) stop                                -- Stop (deactivate) one or more units
+        16) disable                             -- Disable one or more unit files
+        17) enable                              -- Enable one or more unit files
+        18) edit                                -- Edit one or more unit files
+        19) list-jobs                           -- List jobs
+        20) list-machines                       -- List the host and all running local containers
+        21) list-unit-files                     -- List installed unit files
+        22) log-level                           -- Get or set the log level
+        23) log-target                          -- Get or set the log target
+        24) mask                                -- Mask one or more units
+        25) reenable                            -- Reenable one or more unit files
+        26) set-environment                     -- Set one or more environment variables
+        27) unmask                              -- Unmask one or more units"""
+        read -r option
+        clear
+        
+    }
+    show_services
+
+    case $option in
+        1) sudo systemctl bind $service;;
+        2) sudo systemctl cat $service;;
+        3) sudo systemctl clean $service;;
+        4) sudo systemctl help $service;;
+        5) sudo systemctl kill $service;;
+        6) sudo systemctl reload $service;;
+        7) sudo systemctl list-dependencies $service;;
+        8) sudo systemctl list-sockets $service;;
+        9) sudo systemctl list-timers $service;;
+        10) sudo systemctl list-units $service;;
+        11) sudo systemctl restart $service;;
+        12) sudo systemctl show $service;;
+        13) sudo systemctl start $service;;
+        14) sudo systemctl status $service;;
+        15) sudo systemctl stop $service;;
+        16) sudo systemctl disable $service;;
+        17) sudo systemctl enable $service;;
+        18) sudo systemctl edit $service;;
+        19) sudo systemctl list-jobs $service;;
+        20) sudo systemctl list-machines $service;;
+        21) sudo systemctl list-unit-files $service;;
+        22) sudo systemctl log-level $service;;
+        23) sudo systemctl log-target $service;;
+        24) sudo systemctl mask $service;;
+        25) sudo systemctl reenable $service;;
+        26) sudo systemctl set-environment $service;;
+        27) sudo systemctl unmask $service;;
+    esac
 }
+
 
 function port {  		# Identify the service behind specific port(s)
 	sudo lsof -i:$1
