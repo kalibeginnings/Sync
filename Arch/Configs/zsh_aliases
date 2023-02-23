@@ -443,9 +443,7 @@ function services {
     26) set-environment                     -- Set one or more environment variables
     27) unmask                              -- Unmask one or more units"""
     read -r option
-    clear
         
-
     case $option in
         1) sudo systemctl bind $service;;
         2) sudo systemctl cat $service;;
