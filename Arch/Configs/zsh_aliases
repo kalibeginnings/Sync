@@ -410,8 +410,8 @@ function services {
         echo $message
         echo "\n" "Please Select a Service: " 
         read -r choice
-        if ! [[ $1 =~ '^[0-9]+$' ]]; then 
-            show_services "$choice"
+        if ! [[ "$choice" =~ '^[0-9]+$' ]]; then 
+            services "$choice"
         fi
         service=$(echo $message | sed -n "$(($choice+1))p" | awk '{print $2}')
         systemctl status $service | cat
