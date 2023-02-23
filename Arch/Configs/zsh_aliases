@@ -394,84 +394,112 @@ function checkports {
 
 
 function services {
-    clear
-    if [ $# -ne 0 ]; then
-        units=$(systemctl list-units)
-        list=$(echo $units | grep "$@")
-        header=$(echo $units | sed -n "1p")
-        body=$(echo $list | cat -b)
-    else 
-        list=$(systemctl list-units --type=service --state=running | head -n -4)
-        header=$(echo $list | sed -n "1p")
-        body=$(echo $list | sed  "1d" | cat -b)
-    fi
-    message="          $header\n$body"
-    echo $message
-    echo "\n" "Please Select a Service: " 
-    read -r choice
-    if ! [[ "$choice" =~ '^[0-9]+$' ]]; then 
-        services "$choice"
-    fi
-    service_name=$(echo $message | sed -n "$(($choice+1))p" | awk '{print $2}')
-    systemctl status $service_name | cat
-    echo "\n" """Please Select an Option: 
-    1) bind                                 -- Bind mount a path from the host into a unit's namespace
-    2) cat                                  -- Show the source unit files and drop-ins
-    3) clean                                -- Remove configuration, state, cache, logs or runtime data of units
-    4) help                                 -- Show documentation for specified units
-    5) kill                                 -- Send signal to processes of a unit
-    6) reload                               -- Reload one or more units
-    7) list-dependencies                    -- Show unit dependency tree
-    8) list-sockets                         -- List sockets
-    9) list-timers                          -- List timers
-    10) list-units                          -- List units 
-    11) restart                             -- Start or restart one or more units 
-    12) show                                -- Show properties of one or more units/jobs or the manager
-    13) start                               -- Start (activate) one or more units
-    14) status                              -- Show runtime status of one or more units
-    15) stop                                -- Stop (deactivate) one or more units
-    16) disable                             -- Disable one or more unit files
-    17) enable                              -- Enable one or more unit files
-    18) edit                                -- Edit one or more unit files
-    19) list-jobs                           -- List jobs
-    20) list-machines                       -- List the host and all running local containers
-    21) list-unit-files                     -- List installed unit files
-    22) log-level                           -- Get or set the log level
-    23) log-target                          -- Get or set the log target
-    24) mask                                -- Mask one or more units
-    25) reenable                            -- Reenable one or more unit files
-    26) set-environment                     -- Set one or more environment variables
-    27) unmask                              -- Unmask one or more units"""
-    read -r option
-    case $option in
-        1) sudo systemctl bind $service_name;;
-        2) sudo systemctl cat $service_name;;
-        3) sudo systemctl clean $service_name;;
-        4) sudo systemctl help $service_name;;
-        5) sudo systemctl kill $service_name;;
-        6) sudo systemctl reload $service_name;;
-        7) sudo systemctl list-dependencies $service_name;;
-        8) sudo systemctl list-sockets $service_name;;
-        9) sudo systemctl list-timers $service_name;;
-        10) sudo systemctl list-units $service_name;;
-        11) sudo systemctl restart $service_name;;
-        12) sudo systemctl show $service_name;;
-        13) sudo systemctl start $service_name;;
-        14) sudo systemctl status $service_name;;
-        15) sudo systemctl stop $service_name;;
-        16) sudo systemctl disable $service_name;;
-        17) sudo systemctl enable $service_name;;
-        18) sudo systemctl edit $service_name;;
-        19) sudo systemctl list-jobs $service_name;;
-        20) sudo systemctl list-machines $service_name;;
-        21) sudo systemctl list-unit-files $service_name;;
-        22) sudo systemctl log-level $service_name;;
-        23) sudo systemctl log-target $service_name;;
-        24) sudo systemctl mask $service_name;;
-        25) sudo systemctl reenable $service_name;;
-        26) sudo systemctl set-environment $service_name;;
-        27) sudo systemctl unmask $service_name;;
-    esac
+    function create_menu {
+        clear
+        if [ $# -eq 0 ]; then
+            unset units list header body message
+            list=$(systemctl list-units --type=service --state=running | head -n -4)
+            header=$(echo $list | sed -n "1p")
+            body=$(echo $list | sed  "1d" | cat -b)
+        else
+            unset units list header body message
+            units=$(systemctl list-units)
+            list=$(echo $units | grep "$@")
+            header=$(echo $units | sed -n "1p")
+            body=$(echo $list | cat -b)
+        fi
+        message="          $header\n$body"
+    }
+    
+    function display_service_menu {
+        unset choice
+        echo $message
+        echo "\n" "Please Select a Service: " 
+        read -r choice
+    }
+    function restart_if_string {
+        if ! [[ "$choice" =~ '^[0-9]+$' ]]; then 
+            create_menu $@
+            display_service_menu
+        else 
+            continue
+        fi
+    }
+    function extract_service_name {
+        service_name=$(echo $message | sed -n "$(($choice+1))p" | awk '{print $2}')
+    }
+    function display_service_status {
+        systemctl status $service_name | cat
+    }
+    function display_command_menu {
+        echo "\n" """Please Select an Option: 
+        1) bind                                 -- Bind mount a path from the host into a unit's namespace
+        2) cat                                  -- Show the source unit files and drop-ins
+        3) clean                                -- Remove configuration, state, cache, logs or runtime data of units
+        4) help                                 -- Show documentation for specified units
+        5) kill                                 -- Send signal to processes of a unit
+        6) reload                               -- Reload one or more units
+        7) list-dependencies                    -- Show unit dependency tree
+        8) list-sockets                         -- List sockets
+        9) list-timers                          -- List timers
+        10) list-units                          -- List units 
+        11) restart                             -- Start or restart one or more units 
+        12) show                                -- Show properties of one or more units/jobs or the manager
+        13) start                               -- Start (activate) one or more units
+        14) status                              -- Show runtime status of one or more units
+        15) stop                                -- Stop (deactivate) one or more units
+        16) disable                             -- Disable one or more unit files
+        17) enable                              -- Enable one or more unit files
+        18) edit                                -- Edit one or more unit files
+        19) list-jobs                           -- List jobs
+        20) list-machines                       -- List the host and all running local containers
+        21) list-unit-files                     -- List installed unit files
+        22) log-level                           -- Get or set the log level
+        23) log-target                          -- Get or set the log target
+        24) mask                                -- Mask one or more units
+        25) reenable                            -- Reenable one or more unit files
+        26) set-environment                     -- Set one or more environment variables
+        27) unmask                              -- Unmask one or more units"""
+        read -r option
+    }
+    function process_command_selection {
+        case $option in
+            1) sudo systemctl bind $service_name;;
+            2) sudo systemctl cat $service_name;;
+            3) sudo systemctl clean $service_name;;
+            4) sudo systemctl help $service_name;;
+            5) sudo systemctl kill $service_name;;
+            6) sudo systemctl reload $service_name;;
+            7) sudo systemctl list-dependencies $service_name;;
+            8) sudo systemctl list-sockets $service_name;;
+            9) sudo systemctl list-timers $service_name;;
+            10) sudo systemctl list-units $service_name;;
+            11) sudo systemctl restart $service_name;;
+            12) sudo systemctl show $service_name;;
+            13) sudo systemctl start $service_name;;
+            14) sudo systemctl status $service_name;;
+            15) sudo systemctl stop $service_name;;
+            16) sudo systemctl disable $service_name;;
+            17) sudo systemctl enable $service_name;;
+            18) sudo systemctl edit $service_name;;
+            19) sudo systemctl list-jobs $service_name;;
+            20) sudo systemctl list-machines $service_name;;
+            21) sudo systemctl list-unit-files $service_name;;
+            22) sudo systemctl log-level $service_name;;
+            23) sudo systemctl log-target $service_name;;
+            24) sudo systemctl mask $service_name;;
+            25) sudo systemctl reenable $service_name;;
+            26) sudo systemctl set-environment $service_name;;
+            27) sudo systemctl unmask $service_name;;
+        esac
+    }
+    create_menu
+    display_service_menu
+    restart_if_string
+    extract_service_name
+    display_service_status
+    display_command_menu
+    process_command_selection
 }
 
 
