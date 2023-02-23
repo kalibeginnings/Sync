@@ -412,8 +412,8 @@ function services {
     if ! [[ "$choice" =~ '^[0-9]+$' ]]; then 
         services "$choice"
     fi
-    service=$(echo $message | sed -n "$(($choice+1))p" | awk '{print $2}')
-    systemctl status $service | cat
+    service_name=$(echo $message | sed -n "$(($choice+1))p" | awk '{print $2}')
+    systemctl status $service_name | cat
     echo "\n" """Please Select an Option: 
     1) bind                                 -- Bind mount a path from the host into a unit's namespace
     2) cat                                  -- Show the source unit files and drop-ins
@@ -443,35 +443,34 @@ function services {
     26) set-environment                     -- Set one or more environment variables
     27) unmask                              -- Unmask one or more units"""
     read -r option
-        
     case $option in
-        1) sudo systemctl bind $service;;
-        2) sudo systemctl cat $service;;
-        3) sudo systemctl clean $service;;
-        4) sudo systemctl help $service;;
-        5) sudo systemctl kill $service;;
-        6) sudo systemctl reload $service;;
-        7) sudo systemctl list-dependencies $service;;
-        8) sudo systemctl list-sockets $service;;
-        9) sudo systemctl list-timers $service;;
-        10) sudo systemctl list-units $service;;
-        11) sudo systemctl restart $service;;
-        12) sudo systemctl show $service;;
-        13) sudo systemctl start $service;;
-        14) sudo systemctl status $service;;
-        15) sudo systemctl stop $service;;
-        16) sudo systemctl disable $service;;
-        17) sudo systemctl enable $service;;
-        18) sudo systemctl edit $service;;
-        19) sudo systemctl list-jobs $service;;
-        20) sudo systemctl list-machines $service;;
-        21) sudo systemctl list-unit-files $service;;
-        22) sudo systemctl log-level $service;;
-        23) sudo systemctl log-target $service;;
-        24) sudo systemctl mask $service;;
-        25) sudo systemctl reenable $service;;
-        26) sudo systemctl set-environment $service;;
-        27) sudo systemctl unmask $service;;
+        1) sudo systemctl bind $service_name;;
+        2) sudo systemctl cat $service_name;;
+        3) sudo systemctl clean $service_name;;
+        4) sudo systemctl help $service_name;;
+        5) sudo systemctl kill $service_name;;
+        6) sudo systemctl reload $service_name;;
+        7) sudo systemctl list-dependencies $service_name;;
+        8) sudo systemctl list-sockets $service_name;;
+        9) sudo systemctl list-timers $service_name;;
+        10) sudo systemctl list-units $service_name;;
+        11) sudo systemctl restart $service_name;;
+        12) sudo systemctl show $service_name;;
+        13) sudo systemctl start $service_name;;
+        14) sudo systemctl status $service_name;;
+        15) sudo systemctl stop $service_name;;
+        16) sudo systemctl disable $service_name;;
+        17) sudo systemctl enable $service_name;;
+        18) sudo systemctl edit $service_name;;
+        19) sudo systemctl list-jobs $service_name;;
+        20) sudo systemctl list-machines $service_name;;
+        21) sudo systemctl list-unit-files $service_name;;
+        22) sudo systemctl log-level $service_name;;
+        23) sudo systemctl log-target $service_name;;
+        24) sudo systemctl mask $service_name;;
+        25) sudo systemctl reenable $service_name;;
+        26) sudo systemctl set-environment $service_name;;
+        27) sudo systemctl unmask $service_name;;
     esac
 }
 
