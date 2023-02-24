@@ -395,8 +395,8 @@ function checkports {
 
 function services {
     function create_menu {
-        clear
         if [ $# -eq 0 ]; then
+            clear
             unset units list header body message
             list=$(systemctl list-units --type=service --state=running | head -n -4)
             header=$(echo $list | sed -n "1p")
@@ -421,8 +421,6 @@ function services {
         if ! [[ "$choice" =~ '^[0-9]+$' ]]; then 
             create_menu $@
             display_service_menu
-        else 
-            continue
         fi
     }
     function extract_service_name {
