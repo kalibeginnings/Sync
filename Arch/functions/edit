@@ -1,4 +1,4 @@
-####VERSION  9
+####VERSION  15
 edit () {
 function check_function_exists() {
     if declare -f "$1" > /dev/null; then
@@ -9,29 +9,92 @@ function check_function_exists() {
 }
 
 if [[ $# -eq 1 ]]; then
-	if ! [[ -d "$HOME/.$1" ]]; then 
-		mkdir $HOME/.$1
-	fi
-	if [[ -f "$HOME/$1.wip" ]]; then
-		lastVersionNumber=$(sed -n "1p" $HOME/$1.wip | awk '{print $2}')
-		currentVersionNumber=$(($lastVersionNumber + 1))
-		sed -i "0,/$lastVersionNumber/ s/$lastVersionNumber/$currentVersionNumber/" $HOME/$1.wip
-		nano $HOME/$1.wip
-		cp $HOME/$1.wip $HOME/.$1/$1_$currentVersionNumber.ver
-		source $HOME/$1.wip
+	if [[ $1 = "list" ]]; then
+		echo """
+###########################################################
+###########################################################
+################      Work In Progress     ################
+###########################################################
+###########################################################"""
+		list=$(find . -maxdepth 1 -type f -name '*.wip' | sed -e "s|./||g" -e "s|.wip||g" | cat -b)
+		echo $list
+		read -r option
+		clear
+		name=$(echo $list | sed -n "${option}p" | awk '{print $2}')
+		echo """
+###########################################################
+###########################################################
+################           $name           ################
+###########################################################
+###########################################################"""
+		echo "show, Show This Functions Code\nnano, Edit Function in Nano\nmousepad, Edit Function in Mousepad\nbranch, Create a Branch of This Function\nmerge, Merge Branch into Main\ndelete, Delete This Function\nrestore, Restore to the Original Function\npush, Push This Function to Sync Repository" | column --table --separator=, | cat -b
+		read -r option
+		case $option in 
+			1)
+			clear
+			source $HOME/$name.wip
+			which $name ;;
+			2)
+			lastVersionNumber=$(sed -n "1p" $HOME/$name.wip | awk '{print $2}')
+			currentVersionNumber=$(($lastVersionNumber + 1))
+			sed -i "0,/$lastVersionNumber/ s/$lastVersionNumber/$currentVersionNumber/" $HOME/$name.wip
+			nano $HOME/$name.wip
+			cp $HOME/$name.wip $HOME/.$name/$name_$currentVersionNumber.ver
+			source $HOME/$name.wip  ;;
+			3)
+			lastVersionNumber=$(sed -n "1p" $HOME/$name.wip | awk '{print $2}')
+			currentVersionNumber=$(($lastVersionNumber + 1))
+			sed -i "0,/$lastVersionNumber/ s/$lastVersionNumber/$currentVersionNumber/" $HOME/$name.wip
+			mousepad $HOME/$name.wip &
+			cp $HOME/$name.wip $HOME/.$name/$name_$currentVersionNumber.ver
+			source $HOME/$name.wip  ;;		
+			4)
+			cp $HOME/$name.wip $HOME/$name.branch
+			nano $HOME/$name.branch
+			source $HOME/$name.branch ;;
+			5)
+			lastVersionNumber=$(sed -n "1p" $HOME/$name.wip | awk '{print $2}')
+			currentVersionNumber=$(($lastVersionNumber + 1))
+			echo "#####Version $currentVersionNumber\n" > $HOME/$name.wip
+			cat $HOME/$name.branch >> $HOME/$name.wip ;;
+			6)
+			sudo rm -rf .$name/ $name.wip ;;
+			7)
+			cp $HOME/.$name/$name.orig $HOME/$name.wip
+			nano $HOME/$name.wip; source $HOME/$name.wip ;;
+			8)
+			cp $HOME/$name.wip $HOME/Sync/Arch/functions/$name
+			git -C $HOME/Sync add Arch/functions/$name
+			git -C $HOME/Sync commit -m "Added New Function - $name"
+			git -C $HOME/Sync push; git -C $HOME/Sync pull ;;
+		esac
 	else
-		echo "#####Version 1\n" > $HOME/$1.wip
-		if [[ $(check_function_exists $1) ]]; then
-			echo $(which $1) >>  $HOME/.$1/$1.orig
+		if ! [[ -d "$HOME/.$1" ]]; then 
+			mkdir $HOME/.$1
+		fi
+		if [[ -f "$HOME/$1.wip" ]]; then
+			lastVersionNumber=$(sed -n "1p" $HOME/$1.wip | awk '{print $2}')
+			currentVersionNumber=$(($lastVersionNumber + 1))
+			sed -i "0,/$lastVersionNumber/ s/$lastVersionNumber/$currentVersionNumber/" $HOME/$1.wip
+			nano $HOME/$1.wip
+			cp $HOME/$1.wip $HOME/.$1/$1_$currentVersionNumber.ver
+			source $HOME/$1.wip
 		else
 			echo "#####Version 1\n" > $HOME/$1.wip
-			echo """$1 () {                                 
-       # [Description] 
-}""" >> $HOME/$1.wip
+			if $(check_function_exists $1); then
+				echo $(which $1) >>  $HOME/.$1/$1.orig
+				cp $HOME/.$1/$1.orig $HOME/$1.wip 
+				nano $HOME/$1.wip
+			else
+				echo "#####Version 1\n" > $HOME/$1.wip
+				echo """$1 () {                                 
+	       # [Description] 
+	}""" >> $HOME/$1.wip
+				nano $HOME/$1.wip
+				cp $HOME/$1.wip $HOME/.$1/$1.orig
+			fi
+			source $HOME/$1.wip
 		fi
-		nano $HOME/$1.wip
-		cp $HOME/$1.wip $HOME/.$1/$1.orig
-		source $HOME/$1.wip
 	fi
 else 
 	case $1 in 
@@ -44,7 +107,7 @@ else
 		push) cp $HOME/$2.wip $HOME/Sync/Arch/functions/$2; git -C $HOME/Sync add Arch/functions/$2; git -C $HOME/Sync commit -m "Added New Function - $2"; git -C $HOME/Sync push; git -C $HOME/Sync pull;;
 		del) sudo rm -rf .$2/ $2.wip;;
 		new) if ! [[ -d "$HOME/.$2" ]]; then mkdir $HOME/.$2; fi; echo "#####Version 1\n" > $HOME/$2.wip; echo \ \(\)\ \{$'\n'\ \ \ \ \ \ \ \ \#\ \[Description\]$'\n'\} >> $HOME/$2.wip; nano $HOME/$2.wip; cp $HOME/$2.wip $HOME/.$2/$2.orig; source $HOME/$2.wip ;;
-		restore) cp $HOME/.$2/$2.orig $HOME/$2.wip; nano $HOME/$2.wip; source $HOME/$2.wip;;
+		restore) cp $HOME/.$2/$2.orig $HOME/$2.wip; nano $HOME/$2.wip; source $HOME/$2.wip;;	
 	#	help);;
 	#	undo);; 
 	esac
