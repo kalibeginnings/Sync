@@ -1,0 +1,53 @@
+####VERSION  9
+edit () {
+function check_function_exists() {
+    if declare -f "$1" > /dev/null; then
+        return 0
+    else
+        return 1
+    fi
+}
+
+if [[ $# -eq 1 ]]; then
+	if ! [[ -d "$HOME/.$1" ]]; then 
+		mkdir $HOME/.$1
+	fi
+	if [[ -f "$HOME/$1.wip" ]]; then
+		lastVersionNumber=$(sed -n "1p" $HOME/$1.wip | awk '{print $2}')
+		currentVersionNumber=$(($lastVersionNumber + 1))
+		sed -i "0,/$lastVersionNumber/ s/$lastVersionNumber/$currentVersionNumber/" $HOME/$1.wip
+		nano $HOME/$1.wip
+		cp $HOME/$1.wip $HOME/.$1/$1_$currentVersionNumber.ver
+		source $HOME/$1.wip
+	else
+		echo "#####Version 1\n" > $HOME/$1.wip
+		if [[ $(check_function_exists $1) ]]; then
+			echo $(which $1) >>  $HOME/.$1/$1.orig
+		else
+			echo "#####Version 1\n" > $HOME/$1.wip
+			echo """$1 () {                                 
+       # [Description] 
+}""" >> $HOME/$1.wip
+		fi
+		nano $HOME/$1.wip
+		cp $HOME/$1.wip $HOME/.$1/$1.orig
+		source $HOME/$1.wip
+	fi
+else 
+	case $1 in 
+	#	done) ;;
+	#	revert) ;;
+	#	diff) default2=${2:-$HOME/.$2/$2.orig}; default3=${3:-$HOME/$2}; diff  --color=always -y $default2 $default3.wip;;
+		diff) lastVersionNumber=$(sed -n "1p" $HOME/$2.wip | awk '{print $2}'); diff  --color=always $HOME/.$2/$2_$(($lastVersionNumber - 1)).ver $HOME/$2.wip;;
+		branch) cp $HOME/$2.wip $HOME/$2.branch; nano $HOME/$2.branch; source $HOME/$2.branch;;
+		merge) lastVersionNumber=$(sed -n "1p" $HOME/$2.wip | awk '{print $2}'); currentVersionNumber=$(($lastVersionNumber + 1)); echo "#####Version $currentVersionNumber\n" > $HOME/$2.wip; cat $HOME/$2.branch >> $HOME/$2.wip;; 
+		push) cp $HOME/$2.wip $HOME/Sync/Arch/functions/$2; git -C $HOME/Sync add Arch/functions/$2; git -C $HOME/Sync commit -m "Added New Function - $2"; git -C $HOME/Sync push; git -C $HOME/Sync pull;;
+		del) sudo rm -rf .$2/ $2.wip;;
+		new) if ! [[ -d "$HOME/.$2" ]]; then mkdir $HOME/.$2; fi; echo "#####Version 1\n" > $HOME/$2.wip; echo \ \(\)\ \{$'\n'\ \ \ \ \ \ \ \ \#\ \[Description\]$'\n'\} >> $HOME/$2.wip; nano $HOME/$2.wip; cp $HOME/$2.wip $HOME/.$2/$2.orig; source $HOME/$2.wip ;;
+		restore) cp $HOME/.$2/$2.orig $HOME/$2.wip; nano $HOME/$2.wip; source $HOME/$2.wip;;
+	#	help);;
+	#	undo);; 
+	esac
+fi
+
+}
