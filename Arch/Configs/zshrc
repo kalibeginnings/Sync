@@ -132,6 +132,10 @@ if [ -f $HOME/.zsh_aliases ]; then
     . $HOME/.zsh_aliases
 fi
 
+if [ -d $HOME/.functions/ ]; then
+    . $HOME/.functions/
+fi
+
 # Ngrok Authtokens
 if [ -f $HOME/.zsh_ngrok ]; then
     . $HOME/.zsh_ngrok
