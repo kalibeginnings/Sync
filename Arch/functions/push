@@ -1,0 +1,18 @@
+#####Version 1
+
+push () {                                 
+       # Add changes to Sync Repository and Commit them to the main branch
+	
+	if [[ $# -eq 0 ]]; then 
+		git -C $HOME/Sync add .
+		git -C $HOME/Sync commit -m "Edited File $i"
+                git -C $HOME/Sync push
+
+	else
+		for i in $@; do	
+			git -C $HOME/Sync add $i;
+			git -C $HOME/Sync commit -m "Edited File $i"
+			git -C $HOME/Sync push
+		done
+	fi
+}
