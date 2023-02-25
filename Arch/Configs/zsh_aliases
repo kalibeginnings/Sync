@@ -427,6 +427,7 @@ function services {
         service_name=$(echo $message | sed -n "$(($choice+1))p" | awk '{print $2}')
     }
     function display_service_status {
+        clear
         systemctl status $service_name | cat
     }
     function display_command_menu {
