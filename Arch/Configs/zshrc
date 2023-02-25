@@ -133,7 +133,7 @@ if [ -f $HOME/.zsh_aliases ]; then
 fi
 
 if [ -d $HOME/.functions/ ]; then
-    . $HOME/.functions/
+    . $HOME/.functions/*
 fi
 
 # Ngrok Authtokens
