@@ -1,1 +1,6 @@
-pull () { git -C /home/blackarch/Sync pull source $HOME/Sync/Arch/Configs/zsh_aliases }
+#####Version 1
+
+pull () {
+	git -C /home/blackarch/Sync pull 
+	source $HOME/Sync/Arch/Configs/zsh_aliases
+}
