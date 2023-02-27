@@ -1,0 +1,18 @@
+cheat () {
+	# Description : Get help with any command or language straight from the command line.
+	case "$1" in
+		("help" | "--help" | "-h") cat <<EOF ;;
+cheat <command>             Query a specific command
+cheat <language><question>  Query how to accomplish something in a specific language
+cheat learn <language>      Learn any of 60 languages from your shell
+EOF
+		("shell" | "--shell" | "-s") cheat-sh --shell ;;
+		("learn" | "--learn" | "-l") curl -s cheat.sh/$2/:learn | less ;;
+		(*) if [ $# -gt 1 ]
+			then
+				curl -s cheat.sh/$*
+			else
+				curl -s cheat.sh/$1
+			fi ;;
+	esac
+}
