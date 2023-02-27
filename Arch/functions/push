@@ -1,18 +1,75 @@
 #####Version 1
 
-push () {                                 
-       # Add changes to Sync Repository and Commit them to the main branch
+push () {                                
+	# SYNOPSIS
+    #   push [-h] [-m <message>] <arg1> <arg2>
+    #
+    # DESCRIPTION
+    #   Add changes to Sync Repository and Commit them to the main branch.
+    #
+    # OPTIONS
+    #   -h, --help
+    #       Print help message and exit.
+	#
+	#	-m, --message <message>
+	#		Specify a message to add to your commit.
+    #
+    #   Example 1: Stage changes for both $HOME/Sync/Arch/Configs/zshrc and $HOME/Sync/Arch/setup.sh and Commit them to Sync Repo
+    #       push zshrc setup.sh
+    #
+    #
 	
-	if [[ $# -eq 0 ]]; then 
-		git -C $HOME/Sync add .
-		git -C $HOME/Sync commit -m "Edited File $i"
-                git -C $HOME/Sync push
+	# Process All Flags
+	while getopts "h:m:" opt; do # Loop over options and arguments using getopts
+        case $opt in
+            h) # Print help message and exit
+                echo "Usage: functionName [-h] [-m <message>] <arg1> <arg2>"
+                echo ""
+                echo "Options:"
+                echo "-h, --help              Print help message and exit."
+				echo "-m, --message <message> Specify a message to add to your commit."
+                echo ""
+				echo "EXAMPLES"
+				echo "  Example 1: Stage changes for both $HOME/Sync/Arch/Configs/zshrc and $HOME/Sync/Arch/setup.sh and Commit them to Sync Repo"
+				echo "      push zshrc setup.sh"
+                #exit 0
+                ;;
+			m)  # Set message variable
+				message=$OPTARG
+				;;
+            :) # Print error message and exit if option requires an argument
+                echo "Option -$OPTARG requires an argument." >&2
+                exit 1
+                ;;
+            \?) # Print error message and exit if option is invalid
+                echo "Invalid option: -$OPTARG" >&2
+                exit 1
+                ;;
+        esac
+    done
+    shift $((OPTIND - 1)) # Shift positional parameters to skip processed options
 
+    # Store positional arguments
+    arg1=$1
+    arg2=$2
+
+    # Store local variables
+    local directory="$HOME/Sync"
+
+	if [[ $# -eq 0 ]]; then 
+		message="Updated Everything"
+		git -C $directory add .
+		git -C $directory commit -m "$message"
+		git -C $directory push
 	else
+        message="Edited file(s) $@"
 		for i in $@; do	
-			git -C $HOME/Sync add $i;
-			git -C $HOME/Sync commit -m "Edited File $i"
-			git -C $HOME/Sync push
+			filename="$(sudo find $HOME -path $HOME/Sync/Kali -prune -o -type f -name "$i" -print)"
+            directoryName=$(echo $filename | rev | cut -d/ -f2 | rev)
+            directory=$(sudo find $HOME -type d -path $HOME/Sync/Kali -prune -o -name "$directoryName" -print)
+			git -C $directory add $filename
 		done
+		git -C $directory commit -m "$message"
+		git -C $directory push
 	fi
 }
