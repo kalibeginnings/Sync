@@ -21,8 +21,12 @@ push () {
 				echo "EXAMPLES"
 				echo "  Example 1: Stage changes for both $HOME/Sync/Arch/Configs/zshrc and $HOME/Sync/Arch/setup.sh and Commit them to Sync Repo"
 				echo "      push zshrc setup.sh" ;;
-			(f) source $HOME/Sync/Arch/functions/edit
-				edit push $OPTARG ;;
+			(f) cp $(type push | rev | awk '{print $1}' | rev) $HOME/Sync/Arch/functions/$OPTARG
+				git -C $HOME/Sync add Arch/functions/$OPTARG
+				git -C $HOME/Sync commit -m "Added New Function - $OPTARG"
+				git -C $HOME/Sync push
+				git -C $HOME/Sync pull
+				rm -rf $HOME/$OPTARG.wip $HOME/.$OPTARG;;
 			(m) message=$OPTARG  ;;
 			(:) echo "Option -$OPTARG requires an argument." >&2
 				exit 1 ;;
@@ -33,7 +37,7 @@ push () {
 	shift $((OPTIND - 1))
 	arg1=$1 
 	arg2=$2 
-	if [ $@ -gt 0 ]
+	if [[ $@ -ne 0 ]]
 	then
 		message="Edited file(s) $@" 
 		for i in $@
