@@ -1,4 +1,3 @@
-####VERSION  18
 edit () {
 function check_function_exists() {
     if declare -f "$1" > /dev/null; then
@@ -60,8 +59,7 @@ createNewFunction () {
 	echo """$1 () {                                 
 	       # [Description] 
 	}""" >> $HOME/$1.wip
-	nano $HOME/$1.wip
-	waitUntil nano 
+	code $HOME/$1.wip
 	cp $HOME/$1.wip $HOME/.$1/$1.orig
 	source $HOME/$1.wip 
 }
@@ -69,7 +67,6 @@ createNewFunction () {
 nanoFunction () {
 	checksumAndVerifyVersion $1
 	nano $HOME/$1.wip 2&>1
-	waitUntil nano 
 	storeVersionIfModified $1
 }
 
@@ -89,8 +86,7 @@ vsCodeFunction () {
 
 createBranch () {
 	cp $HOME/$1.wip $HOME/$1.branch
-	nano $HOME/$1.branch
-	waitUntil nano 
+	code $HOME/$1.branch
 	source $HOME/$1.branch 
 }
 
@@ -103,7 +99,7 @@ mergeBranch () {
 
 restoreOriginal () {
 	cp $HOME/.$1/$1.orig $HOME/$1.wip
-	nano $HOME/$1.wip; source $HOME/$1.wip 
+	code $HOME/$1.wip; source $HOME/$1.wip
 }
 
 pushToRepo () {
@@ -117,7 +113,9 @@ pushToRepo () {
 viewChanges () {
 	currentVersionNumber=$(sed -n "1p" $HOME/$1.wip | awk '{print $2}')
 	lastVersionNumber=$(($currentVersionNumber - 1))
-	diff $HOME/.$1/$1_$lastVersionNumber.ver $HOME/$1.wip
+	lastVersionFile=$HOME/.$1/$1_$lastVersionNumber.ver
+	if ! [ -f $HOME/.$1/$1_$lastVersionNumber.ver ]; then lastVersionFile="$HOME/.$1/$1.orig"; fi
+	diff $lastVersionFile $HOME/$1.wip
 }
 
 function editMenu {
@@ -171,18 +169,21 @@ if [[ $# -eq 1 ]]; then
 	if [[ -f "$HOME/$1.wip" ]]; then
 		nanoFunction $1
 	else
-		echo "#####Version 1\n" > $HOME/$1.wip
 		if $(check_function_exists $1); then
-			echo $(which $1) >>  $HOME/.$1/$1.orig
-			cp $HOME/.$1/$1.orig $HOME/$1.wip 
-			nano $HOME/$1.wip
-		else
 			echo "#####Version 1\n" > $HOME/$1.wip
+			which $1 | cat > $HOME/.$1/$1.orig 
+			which $1 | cat >> $HOME/$1.wip
+			checksumAndVerifyVersion $1
+			code $HOME/$1.wip
+			waitUntil electron
+			storeVersionIfModified $1
+		else
+			echo "#####Version 0\n" > $HOME/$1.wip
 			echo """$1 () {                                 
        # [Description] 
 }""" >> $HOME/$1.wip
-			nano $HOME/$1.wip
-			waitUnti nano
+			code $HOME/$1.wip
+			waituntil electron
 			cp $HOME/$1.wip $HOME/.$1/$1.orig
 		fi
 		source $HOME/$1.wip
