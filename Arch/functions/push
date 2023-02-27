@@ -1,7 +1,15 @@
 #####Version 1
 
 push () {
-	while getopts "h:m:" opt
+	local directory="$HOME/Sync" 
+	if [[ $# -eq 0 ]]
+	then
+		message="Updated Everything" 
+		git -C $directory add .
+		git -C $directory commit -m "$message"
+		git -C $directory push
+	fi
+	while getopts "hf:m:" opt
 	do
 		case $opt in
 			(h) echo "Usage: functionName [-h] [-m <message>] <arg1> <arg2>"
@@ -13,6 +21,8 @@ push () {
 				echo "EXAMPLES"
 				echo "  Example 1: Stage changes for both $HOME/Sync/Arch/Configs/zshrc and $HOME/Sync/Arch/setup.sh and Commit them to Sync Repo"
 				echo "      push zshrc setup.sh" ;;
+			(f) source $HOME/Sync/Arch/functions/edit
+				edit push $OPTARG ;;
 			(m) message=$OPTARG  ;;
 			(:) echo "Option -$OPTARG requires an argument." >&2
 				exit 1 ;;
@@ -23,14 +33,8 @@ push () {
 	shift $((OPTIND - 1))
 	arg1=$1 
 	arg2=$2 
-	local directory="$HOME/Sync" 
-	if [[ $# -eq 0 ]]
+	if [ $@ -gt 0 ]
 	then
-		message="Updated Everything" 
-		git -C $directory add .
-		git -C $directory commit -m "$message"
-		git -C $directory push
-	else
 		message="Edited file(s) $@" 
 		for i in $@
 		do
