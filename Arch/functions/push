@@ -21,7 +21,7 @@ push () {
 				echo "EXAMPLES"
 				echo "  Example 1: Stage changes for both $HOME/Sync/Arch/Configs/zshrc and $HOME/Sync/Arch/setup.sh and Commit them to Sync Repo"
 				echo "      push zshrc setup.sh" ;;
-			(f) cp $(type push | rev | awk '{print $1}' | rev) $HOME/Sync/Arch/functions/$OPTARG
+			(f) cp $(type $OPTARG | rev | awk '{print $1}' | rev) $HOME/Sync/Arch/functions/$OPTARG
 				git -C $HOME/Sync add Arch/functions/$OPTARG
 				git -C $HOME/Sync commit -m "Added New Function - $OPTARG"
 				git -C $HOME/Sync push

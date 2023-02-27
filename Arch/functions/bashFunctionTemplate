@@ -1,0 +1,101 @@
+#!/bin/bash
+
+function functionName() {
+    # SYNOPSIS
+    #   functionName [-h] [-f <filename>] [-d <directory>] <arg1> <arg2>
+    #
+    # DESCRIPTION
+    #   A short description of what the function does.
+    #
+    # OPTIONS
+    #   -h, --help
+    #       Print help message and exit.
+    #
+    #   -f, --file <filename>
+    #       Specify a filename to use.
+    #
+    #   -d, --directory <directory>
+    #       Specify a directory to use.
+    #
+    # EXAMPLES
+    #   Example 1: Explain what this example does
+    #       functionName arg1 arg2
+    #
+    #   Example 2: Explain what this example does
+    #       functionName -f filename.txt arg1 arg2
+    #
+
+
+    # Variables for Bash color codes
+    RED='\033[0;31m'
+    GREEN='\033[0;32m'
+    YELLOW='\033[0;33m'
+    BLUE='\033[0;34m'
+    PURPLE='\033[0;35m'
+    CYAN='\033[0;36m'
+    WHITE='\033[0;37m'
+    NC='\033[0m' # No Color
+
+    # Initialize variables with default values
+    local filename=""
+    local directory=""
+    local arg1=""
+    local arg2=""
+
+    # Parse command line arguments
+    while getopts "hf:d:" opt; do # Loop over options and arguments using getopts
+        case $opt in
+            h) # Print help message and exit
+                echo "Usage: functionName [-h] [-f <filename>] [-d <directory>] <arg1> <arg2>"
+                echo ""
+                echo "Options:"
+                echo "-h, --help              Print help message and exit."
+                echo "-f, --file <filename>   Specify a filename to use."
+                echo "-d, --directory <dir>   Specify a directory to use."
+                exit 0
+                ;;
+            f) # Set filename variable
+                filename=$OPTARG
+                ;;
+            d) # Set directory variable
+                directory=$OPTARG
+                ;;
+            :) # Print error message and exit if option requires an argument
+                echo "Option -$OPTARG requires an argument." >&2
+                exit 1
+                ;;
+            \?) # Print error message and exit if option is invalid
+                echo "Invalid option: -$OPTARG" >&2
+                exit 1
+                ;;
+        esac
+    done
+    shift $((OPTIND - 1)) # Shift positional parameters to skip processed options
+
+    # Store positional arguments
+    arg1=$1
+    arg2=$2
+
+    # Code component 1
+    local var1=$arg1 # Assign arg1 to var1
+    local var2=$arg2 # Assign arg2 to var2
+
+    # Code component 2
+    if [[ -n $var1 ]]; then # Check if var1 is not empty
+        echo -e "${GREEN}Variable 1 is not empty${NC}"
+    else
+        echo -e "${RED}Variable 1 is empty${NC}"
+    fi
+
+    # Code component 3
+    if [[ -d $directory ]]; then # Check if directory exists
+        echo -e "${GREEN}Directory exists${NC}"
+    else
+        echo -e "${RED}Directory does not exist${NC}"
+    fi
+
+    # Code component 4
+    while read line; do # Loop over lines of the file specified by filename
+        echo "Line: $line"
+    done < "$filename" # Redirect file contents to loop input
+}
